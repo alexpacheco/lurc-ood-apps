@@ -1,0 +1,11 @@
+---
+name: Maple
+category: Interactive Apps
+subcategory: GUIs
+role: batch_connect
+description: |
+  This app will launch a [Maple] GUI on the [Sol cluster]. You will be able
+  to interact with the Maple GUI through a VNC session.
+
+  [Maple]: https://www.maplesoft.com
+  [Sol cluster]: https://confluence.cc.lehigh.edu/display/hpc/Sol
