@@ -1,0 +1,65 @@
+<%
+  result = %x[id]
+%>
+---
+cluster: "sol"
+description: |
+  This app will launch Mathematica GUI on one Sol node. 
+attributes:
+  num_cores:
+    widget: "number_field"
+    label: "Number of cores"
+    value: 1
+    min: null
+    max: 2
+    help: "Only single core jobs accepted"
+  bc_num_hours:
+    label: "Number of hours"
+    value: 1   
+    min: null
+    max: 2
+    help: "Maximum walltime is limited to 1 hour"
+  bc_account:
+    label: "Account"
+    help: "Leave blank if using your default allocation."
+    value: "lts"
+  custom_queue:
+    label: "Partition"
+    help: "Please select a partition from the drop-down."
+    widget: select
+    options:
+      - [ "debug partition, 16 cores, 1 hour, 3.5GB/core", "debug" ]
+      - [ "lts partition, 18 cores, 72 hours, 6GB/core", "lts" ]
+      - [ "eng partition, 22 cores, 72 hours, 5GB/core", "eng" ]
+      - [ "engc partition, 24 cores, 72 hours, 2.5GB/core", "engc" ]
+      - [ "enge/engi partition, 36 cores, 72 hours, 5GB/cores", "enge" ]
+      - [ "enge/engi partition, 36 cores, 72 hours, 5GB/cores", "engi" ]
+      - [ "im1080 partition, 20 cores, 48 hours, 5GB/core", "im1080" ]
+      - [ "im2080 partition, 28 cores, 48 hours, 5GB/core", "im2080" ]
+      - [ "chem partition, 36 cores, 48 hours, 5GB/core", "chem" ]
+      - [ "health partition, 36 cores, 48 hours, 5GB/core", "health" ]
+      <% if /himem/ =~ result  %>
+      - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
+      <% end %>
+      <% if /HPCSOFT/ =~ result  %>
+      - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
+      - [ "singularity test", "singularity-test"]
+      - [ "virtual desktop", "vdi-test"]
+      <% end %>
+  version:
+    widget: select
+    label: "Mathematica version"
+    help: "This defines the version of Mathematica you want to load." 
+    options:
+      - [ "10.4", "mathematica/10.4"]
+      - [ "12.0", "mathematica/12.0"]
+form:
+  - version
+  - num_cores
+  - bc_num_hours
+  - bc_account
+  - custom_queue
+  - bc_email_on_started
+
+
+

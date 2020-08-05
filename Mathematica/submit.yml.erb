@@ -1,0 +1,13 @@
+---
+batch_connect:
+  template: vnc
+  script_wrapper: |
+        export XDG_RUNTIME_DIR=""
+        %s
+script:
+  queue_name: <%= custom_queue %>
+  native:
+    - "-N"
+    - "1"
+    - "-n"
+    - "<%= num_cores %>"
