@@ -4,14 +4,9 @@
 ---
 cluster: "sol"
 description: |
-  This app will launch Maple GUI on one Sol node. 
+  This app will launch Mathematica GUI on one Sol node. 
 attributes:
-  num_cores:
-    label: "Number of cores"
-    value: 1
-    min: null
-    max: 2
-    help: "Only single core jobs accepted"
+  num_cores: 1
   bc_num_hours:
     label: "Number of hours"
     value: 1   
@@ -28,6 +23,7 @@ attributes:
     widget: select
     options:
       - [ "debug partition, 16 cores, 1 hour, 3.5GB/core", "debug" ]
+      <% if /HPCSOFT/ =~ result  %>
       - [ "lts partition, 18 cores, 72 hours, 6GB/core", "lts" ]
       - [ "eng partition, 22 cores, 72 hours, 5GB/core", "eng" ]
       - [ "engc partition, 24 cores, 72 hours, 2.5GB/core", "engc" ]
@@ -37,20 +33,17 @@ attributes:
       - [ "im2080 partition, 28 cores, 48 hours, 5GB/core", "im2080" ]
       - [ "chem partition, 36 cores, 48 hours, 5GB/core", "chem" ]
       - [ "health partition, 36 cores, 48 hours, 5GB/core", "health" ]
-      <% if /himem/ =~ result  %>
-      - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
-      <% end %>
-      <% if /HPCSOFT/ =~ result  %>
       - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
       - [ "singularity test", "singularity-test"]
       - [ "virtual desktop", "vdi-test"]
       <% end %>
   version:
     widget: select
-    label: "Maple version"
-    help: "This defines the version of Maple you want to load." 
+    label: "Mathematica version"
+    help: "This defines the version of Mathematica you want to load." 
     options:
-      - [ "2016", "maple/2016"]
+      - [ "10.4", "mathematica/10.4"]
+      - [ "12.0", "mathematica/12.0"]
 form:
   - version
   - num_cores
