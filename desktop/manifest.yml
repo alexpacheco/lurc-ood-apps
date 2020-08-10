@@ -1,7 +1,7 @@
 ---
 name: Desktop
 icon: fa://desktop
-category: Desktop Apps
+category: Interactive Apps
 subcategory: Desktops
 role: batch_connect
 description: |

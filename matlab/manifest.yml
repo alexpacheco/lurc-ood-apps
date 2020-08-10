@@ -1,6 +1,6 @@
 ---
 name: MATLAB
-category: Desktop Apps
+category: Interactive Apps
 subcategory: GUIs
 role: batch_connect
 description: |
