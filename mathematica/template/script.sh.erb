@@ -17,10 +17,10 @@ cd "${HOME}"
   export XDG_CACHE_HOME="$(mktemp -d)"
   module restore
   set -x
-  xfwm4 --compositor=off --daemon --sm-client-disable
-  xsetroot -solid "#D3D3D3"
-  xfsettingsd --sm-client-disable
-  xfce4-panel --sm-client-disable
+  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfwm4 --compositor=off --daemon --sm-client-disable
+  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xsetroot -solid "#D3D3D3"
+  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfsettingsd --sm-client-disable
+  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfce4-panel --sm-client-disable
 ) &
 
 #

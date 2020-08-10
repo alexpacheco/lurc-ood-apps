@@ -4,14 +4,16 @@
 ---
 cluster: "sol"
 description: |
-  This app will launch Maple GUI on one Sol node. 
+  This app will launch Maple on one Sol cpu. You will be
+  able to interact with Maple through a VNC session.
 attributes:
   num_cores: 1
+  bc_num_slots: "1"
   bc_num_hours:
     label: "Number of hours"
     value: 1   
-    min: null
-    max: 2
+    min: 1
+    max: 72
     help: "Maximum walltime is limited to 1 hour"
   bc_account:
     label: "Account"
@@ -23,7 +25,6 @@ attributes:
     widget: select
     options:
       - [ "debug partition, 16 cores, 1 hour, 3.5GB/core", "debug" ]
-      <% if /HPCSOFT/ =~ result  %>
       - [ "lts partition, 18 cores, 72 hours, 6GB/core", "lts" ]
       - [ "eng partition, 22 cores, 72 hours, 5GB/core", "eng" ]
       - [ "engc partition, 24 cores, 72 hours, 2.5GB/core", "engc" ]
@@ -33,6 +34,10 @@ attributes:
       - [ "im2080 partition, 28 cores, 48 hours, 5GB/core", "im2080" ]
       - [ "chem partition, 36 cores, 48 hours, 5GB/core", "chem" ]
       - [ "health partition, 36 cores, 48 hours, 5GB/core", "health" ]
+      <% if /himem/ =~ result  %>
+      - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
+      <% end %>
+      <% if /HPCSOFT/ =~ result  %>
       - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
       - [ "singularity test", "singularity-test"]
       - [ "virtual desktop", "vdi-test"]
@@ -46,6 +51,7 @@ attributes:
 form:
   - version
   - num_cores
+  - bc_num_slots
   - bc_num_hours
   - bc_account
   - custom_queue
