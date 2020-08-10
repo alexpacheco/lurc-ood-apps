@@ -1,0 +1,11 @@
+---
+name: Abaqus/CAE
+category: Desktop Apps
+subcategory: GUIs
+role: batch_connect
+description: |
+  This app will launch an [Abaqus/CAE] GUI on the [Sol cluster]. You will be
+  able to interact with the Abaqus/CAE GUI through a VNC session for 1 hour.
+
+  [Abaqus/CAE]: https://www.3ds.com/products-services/simulia/products/abaqus/abaquscae/
+  [Sol cluster]: https://confluence.cc.lehigh.edu/x/B6H0BQ

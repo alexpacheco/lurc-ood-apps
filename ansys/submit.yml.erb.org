@@ -1,0 +1,20 @@
+<%-
+  num_nodes = bc_num_slots.blank? ? 1 : bc_num_slots.to_i
+-%>
+---
+batch_connect:
+  template: "vnc"
+script:
+  native:
+    resources:
+      nodes: "<%= num_nodes %><%= node_type %>"
+      software: "ansys+1"
+
+
+# From CHPC's script
+#    <%- if gpu_type != "none" -%>
+#    - "--gres=gpu:<%= gpu_type %>"
+#    <%- end -%>
+#    <%- if memtask != "default" -%>
+#    - "--mem"
+#    - "<%= memtask %>"
