@@ -7,4 +7,5 @@ Open OnDemand Applications on Lehigh's HPC cluster.
 3. MATLAB
 4. Abaqus
 5. Ansys
-
+6. Desktop Environment - MATE & XCFE
+ 

@@ -1,0 +1,12 @@
+---
+name: Desktop
+icon: fa://desktop
+category: Desktop Apps
+subcategory: Desktops
+role: batch_connect
+description: |
+  This app will launch an interactive desktop on the [Sol cluster] utilizing one cpu. You
+  will have full access to the resources these nodes provide. This is analogous
+  to an interactive batch job.
+
+  [Sol cluster]: https://confluence.cc.lehigh.edu/x/B6H0BQ

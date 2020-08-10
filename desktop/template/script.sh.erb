@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Change working directory to user's home directory
+cd "${HOME}"
+
+# Reset module environment (may require login shell for some HPC clusters)
+#module purge && module restore
+
+# Define Container Image
+
+
+# Start up desktop
+source "<%= session.staged_root.join("desktops", "#{context.desktop}.sh") %>"
+

@@ -1,0 +1,14 @@
+# Export the module function if it exists
+[[ $(type -t module) == "function" ]] && export -f module
+
+# Find available port to run web server on
+export port=$(find_port)
+#
+# # Define a password and password file used for authentication
+password="$(create_passwd 12)"
+export PASSWORD_FILE="${PWD}/passwd"
+#
+# # Create password file used by web server
+(umask 077 && echo "${password}" > "${PASSWORD_FILE}")
+#
+#
