@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# Clean the environment
+module purge
+
+# Set working directory to home directory
+cd "${HOME}"
+
+# Load the required environment
+module load <%= context.version %>
+
+#
+# Launch Xfce Window Manager and Panel
+#
+# Adding singularity exec /share/Apps/virtualapps/centos7/xfce.sif 
+# https://github.com/mcw-rcc/bc_rcc_igv do not have the last 2 lines
+(
+  export SEND_256_COLORS_TO_REMOTE=1
+  export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
+  export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
+  export XDG_CACHE_HOME="$(mktemp -d)"
+  module restore
+  set -x
+  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfwm4 --compositor=off --daemon --sm-client-disable
+  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xsetroot -solid "#D3D3D3"
+  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfsettingsd --sm-client-disable
+  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfce4-panel --sm-client-disable
+) &
+
+
+#
+# Start MATLAB
+#
+
+# Launch MATLAB
+module list
+set -x
+matlab -desktop
+
