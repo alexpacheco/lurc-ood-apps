@@ -24,7 +24,6 @@ cd "${HOME}"
 #
 
 (
-  module restore
   export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
   export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
   export XDG_CACHE_HOME="$(mktemp -d)"
