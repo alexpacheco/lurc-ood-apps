@@ -9,4 +9,7 @@ Open OnDemand Applications on Lehigh's HPC cluster.
 5. Ansys
 6. Desktop Environment - MATE & XCFE
 7. GNU Octave
- 
+8. SAS 
+
+
+
