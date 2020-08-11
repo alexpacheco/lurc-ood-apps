@@ -1,0 +1,12 @@
+---
+name: GNU Octave
+category: Interactive Apps
+subcategory: GUIs
+role: batch_connect
+description: |
+  This app will launch a [GNU Octave] GUI on the [Sol cluster]. 
+  You will be able to interact with the GNU Octave GUI through a 
+  VNC session for 1 hour.
+
+  [GNU Octave]: https://www.gnu.org/software/octave
+  [Sol cluster]: https://confluence.cc.lehigh.edu/x/B6H0BQ
