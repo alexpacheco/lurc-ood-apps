@@ -39,7 +39,7 @@ cd "${HOME}"
 
 # Load the required environment
 module load intel # for Intel MPI
-module load <%= context.version %>
+module load ansys/<%= context.version %>
 
 # Another ANSYS job with the same job name (file) is already running in this
 # directory or the file.lock file has not been deleted from an abnormally
