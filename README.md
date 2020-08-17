@@ -10,6 +10,14 @@ Open OnDemand Applications on Lehigh's HPC cluster.
 6. Desktop Environment - MATE & XCFE
 7. GNU Octave
 8. SAS 
-
-
+9. Visualization Tools
+   - ASE
+   - Avogadro 2
+   - Gabedit
+   - GaussView
+   - Paraview
+   - PWGui
+   - PyMol
+   - VESTA
+   - XCrysDen
 

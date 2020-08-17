@@ -1,0 +1,11 @@
+---
+name: Visualization
+icon: fa://desktop
+category: Interactive Apps
+subcategory: GUIs
+role: batch_connect
+description: |
+  This app will launch a [Visualization Application] on the [Sol cluster] utilizing one cpu. 
+
+  [Sol cluster]: https://confluence.cc.lehigh.edu/x/B6H0BQ
+  [Visualization Application]: https://confluence.cc.lehigh.edu/x/qan0BQ

@@ -1,0 +1,28 @@
+<%
+#  image="/share/Apps/virtualapps/centos7/" + desktop + ".sif"
+   image="/share/Apps/virtualapps/centos7/chemistry.sif"
+%>
+---
+batch_connect:
+  template: vnc
+#  websockify_cmd: '/usr/bin/websockify'
+  websockify_cmd: '/opt/websockify/run'
+  script_wrapper: |
+    export XDG_RUNTIME_DIR=""
+    cat << "CTRSCRIPT" > container.sh
+    export PATH="$PATH:/opt/TurboVNC/bin"
+    %s
+    CTRSCRIPT
+
+    # your bindpath will differ
+    export SINGULARITY_BINDPATH="$HOME,/share,/run"
+    #
+    #singularity run /share/Apps/virtualapps/centos7/mate.sif
+    singularity exec <%= image %> /bin/bash container.sh    
+script:
+  queue_name: <%= custom_queue %>
+  native:
+    - "-N"
+    - "<%= bc_num_slots %>"
+    - "-n"
+    - "<%= num_cores %>"

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Change working directory to user's home directory
+cd "${HOME}"
+
+# Reset module environment (may require login shell for some HPC clusters)
+module purge && module restore
+
+# Start up desktop
+singularity run -B /share,/home /home/alp514/virtual/xfce.sif 
+
+
+
