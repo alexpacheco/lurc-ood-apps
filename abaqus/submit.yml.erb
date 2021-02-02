@@ -1,5 +1,4 @@
 ---
-
 batch_connect:
   template: vnc
   websockify_cmd: '/opt/websockify/run'
@@ -11,7 +10,7 @@ batch_connect:
     CTRSCRIPT
 
     export SINGULARITY_BINDPATH="$HOME,/share,/run"
-    singularity exec /share/Apps/virtualapps/centos7/xfce.sif /bin/bash container.sh
+    singularity exec /share/Apps/virtualapps/centos7/xfce7.sif /bin/bash container.sh
 script:
   queue_name: <%= custom_queue %>
   native:
@@ -19,3 +18,6 @@ script:
     - "<%= bc_num_slots %>"
     - "-n"
     - "<%= num_cores %>"
+    <%- if gpus > "0" -%>
+    - "--gres=gpu:<%= gpus %>"
+    <%- end -%>

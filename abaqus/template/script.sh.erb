@@ -16,10 +16,10 @@ cd "${HOME}"
   export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
   export XDG_CACHE_HOME="$(mktemp -d)"
   set -x
-  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfwm4 --compositor=off --daemon --sm-client-disable
-  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xsetroot -solid "#D3D3D3"
-  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfsettingsd --sm-client-disable
-  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfce4-panel --sm-client-disable
+  xfwm4 --compositor=off --daemon --sm-client-disable
+  xsetroot -solid "#D3D3D3"
+  xfsettingsd --sm-client-disable
+  xfce.sif xfce4-panel --sm-client-disable
 ) &
 
 #
@@ -27,7 +27,8 @@ cd "${HOME}"
 #
 
 # Load the required environment
-module load intel/18.0.1 abaqus/<%= context.version %>
+module load intel 
+module load abaqus/<%= context.version %>
 
 # Output debug information
 module list
