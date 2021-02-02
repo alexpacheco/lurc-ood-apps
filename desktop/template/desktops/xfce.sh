@@ -37,4 +37,9 @@ else
 fi
 
 # Start up xfce desktop (block until user logs out of desktop)
-xfce4-session
+#xfce4-session
+killall /usr/bin/xfce4-screensaver
+xset -dpms
+xset s noblank
+xset s off
+/usr/bin/dbus-launch /usr/bin/startxfce4

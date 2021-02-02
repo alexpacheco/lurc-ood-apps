@@ -4,17 +4,11 @@
 ---
 cluster: "sol"
 attributes:
-  desktop:
-    widget: select
-    label: "Desktop environment"
-    options:
-      - ["XFCE", "xfce"]
-      - ["MATE", "mate"]
+  desktop: xfce
   help: |
-    This will launch either the [Xfce] or [Mate] desktop environment on the
-    [Sol cluster] using 1 cpu.
+    This will launch the [Xfce] desktop environment on the
+    [Sol cluster].
     [XFCE]: https://xfce.org/
-    [MATE]: https://mate-desktop.org/
     [Sol cluster]: https://confluence.cc.lehigh.edu/x/B6H0BQ
   bc_num_hours:
     label: "Number of hours"
@@ -23,7 +17,12 @@ attributes:
     max: 72
     help: "Maximum walltime is limited to 1 hour"
   bc_num_slots: 1
-  num_cores: 1
+  num_cores: 
+    label: "Number of cores"
+    value: 1
+    min: 1
+    max: 52
+    help: "Maximum is 52 cores on hawkcpu"
   bc_vnc_idle: 0
   bc_vnc_resolution:
     required: true
@@ -45,6 +44,8 @@ attributes:
       - [ "im2080 partition, 28 cores, 48 hours, 5GB/core", "im2080" ]
       - [ "chem partition, 36 cores, 48 hours, 5GB/core", "chem" ]
       - [ "health partition, 36 cores, 48 hours, 5GB/core", "health" ]
+      - [ "hawkcpu partition, 52 cores, 48 hours, 7.4GB/core", "hawkcpu" ]
+      - [ "hawkgpu partition, 48 cores, 48 hours, 4GB/core", "hawkgpu" ]
       <% if /himem/ =~ result  %>
       - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
       <% end %>
@@ -52,8 +53,8 @@ attributes:
       - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
       - [ "singularity test", "singularity-test"]
       - [ "virtual desktop", "vdi-test"]
+      - [ "test", "test"]
       <% end %>
-
 form:
   - bc_vnc_idle
   - desktop
