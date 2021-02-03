@@ -55,6 +55,15 @@ attributes:
       - [ "virtual desktop", "vdi-test"]
       - [ "test", "test"]
       <% end %>
+  gpus: 
+    label: "Number of GPUs"
+    value: 0
+    min: 0
+    max: 8
+    help: "Make sure you are using the correct partition above.<br />
+          lts-gpu, eng-gpu, im1080-gpu: Max 2 gpus per node,<br />
+          im2080-gpu: Max 4 gpus per node,<br />
+          hawkgpu: Max 8 gpus per node."
 form:
   - bc_vnc_idle
   - desktop
@@ -64,5 +73,6 @@ form:
   - num_cores
   - node_type
   - custom_queue
+  - gpus
   - bc_vnc_resolution
   - bc_email_on_started
