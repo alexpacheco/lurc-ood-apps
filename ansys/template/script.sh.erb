@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-#env |grep SLURM
+env | grep SLURM
+env | grep MODULEPATH
+env | grep PATH
 # Clean the environment
 module purge
 
@@ -27,10 +29,10 @@ cd "${HOME}"
   export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
   export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
   export XDG_CACHE_HOME="$(mktemp -d)"
-  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfwm4 --compositor=off --daemon --sm-client-disable
-  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xsetroot -solid "#D3D3D3"
-  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfsettingsd --sm-client-disable
-  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfce4-panel --sm-client-disable
+  xfwm4 --compositor=off --daemon --sm-client-disable
+  xsetroot -solid "#D3D3D3"
+  xfsettingsd --sm-client-disable
+  -panel --sm-client-disable
 ) &
 
 #

@@ -17,15 +17,25 @@ cd "${HOME}"
   xfwm4 --compositor=off --daemon --sm-client-disable
   xsetroot -solid "#D3D3D3"
   xfsettingsd --sm-client-disable
-  xfce4-panel --sm-client-disable
+#  xfce4-panel --sm-client-disable
 ) &
 
 #singularity exec /home/alp514/virtual/molgfx.sif avogadro2
 <% if /avogadro2/ =~ context.application %>
   # Start avogadro
   avogadro2
+<% elsif /blender/ =~ context.application %>
+  # Start blender
+  blender
 <% elsif /gabedit/ =~ context.application %>
+  # Start gabedit
   gabedit
+<% elsif /ovito/ =~ context.application %>
+  # Start ovito
+  ovito
+<% elsif /xfce/ =~ context.application %>
+  # Start desktop
+  source "<%= session.staged_root.join("desktops", "xfce.sh") %>"
 <% else %>
   module load <%= context.application %>
   <% if /ase/ =~ context.application %>
@@ -50,3 +60,6 @@ cd "${HOME}"
 <% end %>
 
 
+    #xfce4-terminal 
+    #vmd
+    #-T "VMD Terminal" --disable-server
