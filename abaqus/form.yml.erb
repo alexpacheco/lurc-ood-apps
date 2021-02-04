@@ -8,7 +8,11 @@ description: |
   This app will launch Abaqus CAE on one Sol cpu. You will be
   able to interact with Abaqus through a VNC session.
 attributes:
-  num_cores: 1
+  num_cores: 
+    label: "Number of cores"
+    min: 1
+    max: 52
+    help: "Maximum cores you can use on hawkcpu"
   bc_num_slots: "1"
   bc_num_hours:
     label: "Number of hours"
