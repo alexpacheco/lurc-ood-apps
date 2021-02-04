@@ -19,7 +19,7 @@ cd "${HOME}"
   xfwm4 --compositor=off --daemon --sm-client-disable
   xsetroot -solid "#D3D3D3"
   xfsettingsd --sm-client-disable
-  xfce.sif xfce4-panel --sm-client-disable
+  xfce4-panel --sm-client-disable
 ) &
 
 #
@@ -40,7 +40,7 @@ ABAQUS_EXIT_CODE=${PIPESTATUS[0]}
 { set +x; } 2>/dev/null
 
 if [[ ${ABAQUS_EXIT_CODE} -ne 0 ]]; then
-  cat | xmessage -file - -center <<- EOL
+  cat | xmessage -file - -center <<< EOL
     ABAQUS/CAE died with the following output:
     $(cat "<%= session.staged_root.join("abaqus.log") %>")
   EOL
