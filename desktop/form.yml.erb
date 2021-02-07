@@ -15,6 +15,9 @@ attributes:
     help: "Choose CentOS 8 unless you have been told that your application requires CentOS 7"
     widget: select
     options:
+      <% if /HPCSOFT/ =~ result  %>
+      - ["Alma Linux", "alma"]
+      <% end %>
       - ["CentOS 8", "cent8"]
       - ["CentOS 7", "cent7"]
   bc_num_hours:
