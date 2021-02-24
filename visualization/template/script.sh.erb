@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-# Change working directory to user's home directory
+# Clean the environment
+module purge
+
+# Set working directory to home directory
 cd "${HOME}"
 
-# Reset module environment (may require login shell for some HPC clusters)
-#module purge && module restore
-
-# Define Container Image
+#
+# Launch Xfce Window Manager and Panel
+#
 
 (
   export SEND_256_COLORS_TO_REMOTE=1
@@ -36,20 +38,23 @@ cd "${HOME}"
 <% elsif /xfce/ =~ context.application %>
   # Start desktop
   source "<%= session.staged_root.join("desktops", "xfce.sh") %>"
-<% else %>
+<% elsif /chem/ =~ context.application %>
+  module load anaconda3/2020.07
+  module list
   module load <%= context.application %>
-  <% if /ase/ =~ context.application %>
-    module list
-    source activate ase
-    ase gui
-  <% elsif /gview/ =~ context.application %>
+  which ase
+  ase gui
+<% else %>
+  module load cent7
+  module load <%= context.application %>
+  <% if /gview/ =~ context.application %>
     gview
   <% elsif /paraview/ =~ context.application %>
     paraview
-  <% elsif /pwgui/ =~ context.application %>
-    pwgui
   <% elsif /pymol/ =~ context.application %>
     pymol
+  <% elsif /pwgui/ =~ context.application %>
+    pwgui
   <% elsif /vesta/ =~ context.application %>
     VESTA
   <% elsif /vmd/ =~ context.application %>

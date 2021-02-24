@@ -1,6 +1,6 @@
 <%
-#  image="/share/Apps/virtualapps/centos7/" + desktop + ".sif"
-   image="/home/alp514/chemistry.sif"
+   image="/share/Apps/virtualapps/chemistry.sif"
+#   image="/home/alp514/chemistry.sif"
 %>
 ---
 batch_connect:
@@ -26,6 +26,6 @@ script:
     - "<%= bc_num_slots %>"
     - "-n"
     - "<%= num_cores %>"
-    <% if num_gpu.to_i > 0 %>
-    - "--gres=gpu:<% num_gpu %>"
+    <% if num_gpu.to_i > 0  %>
+    - "--gres=gpu:<%= num_gpu %>"
     <% end %>

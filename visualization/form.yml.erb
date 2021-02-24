@@ -8,16 +8,16 @@ attributes:
     widget: select
     label: "Choose visualization application to launch"
     options:
-      - ["ASE 3.17.0", "anaconda/ase"]
+      - ["ASE 3.20.1", "conda/chem"]
       - ["Avogadro2 1.90.2","avogadro2"]
       - ["Blender 2.68", "blender"]
       - ["Ovito 3.2.0","ovito"]
       - ["Gabedit 2.3.0","gabedit"]
       - ["Gauss View","gaussian/gview"]
       - ["Paraview 5.8.0","paraview/5.8.0"]
-      - ["PWGUI 5.4.0","pwgui/5.4.0"]
+      - ["PWGUI 6.1","pwgui/6.1"]
       - ["PyMol 1.8.6","pymol/1.8.6.0"]
-      - ["VESTA 3.4.0","vesta/3.4.0"]
+      - ["VESTA 3.4.6","vesta/3.4.6"]
       - ["XCrysDen 1.5.60","xcrysden/1.5.60"]
   help: |
     This will launch either the [Xfce] or [Mate] desktop environment on the
@@ -32,17 +32,7 @@ attributes:
     max: 72
     help: "Maximum walltime is limited to 1 hour"
   bc_num_slots: 1
-  num_cores:
-    label: "Number of cores"
-    value: 1
-    min: 1
-    max: 36
-    help: "Maximum number cores"
-  num_gpu:
-    label: "Number of GPUs"
-    value: 0
-    min: 0
-    max: 4
+  num_cores: 1
   bc_vnc_idle: 0
   bc_vnc_resolution:
     required: true
@@ -56,18 +46,20 @@ attributes:
     options:
       - [ "debug partition, 16 cores, 1 hour, 3.5GB/core", "debug" ]
       - [ "lts partition, 18 cores, 72 hours, 6GB/core", "lts" ]
-      - [ "eng partition, 22 cores, 72 hours, 5GB/core", "eng" ]
       - [ "lts-gpu partition, 20 cores, 72 hours, 6GB/core", "lts-gpu" ]
+      - [ "eng partition, 22 cores, 72 hours, 5GB/core", "eng" ]
       - [ "eng-gpu partition, 24 cores, 72 hours, 5GB/core", "eng-gpu" ]
       - [ "engc partition, 24 cores, 72 hours, 2.5GB/core", "engc" ]
       - [ "enge/engi partition, 36 cores, 72 hours, 5GB/cores", "enge" ]
       - [ "enge/engi partition, 36 cores, 72 hours, 5GB/cores", "engi" ]
       - [ "im1080 partition, 20 cores, 48 hours, 5GB/core", "im1080" ]
-      - [ "im2080 partition, 28 cores, 48 hours, 5GB/core", "im2080" ]
       - [ "im1080-gpu partition, 24 cores, 48 hours, 5GB/core", "im1080-gpu" ]
+      - [ "im2080 partition, 28 cores, 48 hours, 5GB/core", "im2080" ]
       - [ "im2080-gpu partition, 36 cores, 48 hours, 5GB/core", "im2080-gpu" ]
       - [ "chem partition, 36 cores, 48 hours, 5GB/core", "chem" ]
       - [ "health partition, 36 cores, 48 hours, 5GB/core", "health" ]
+      - [ "hawkcpu partition, 52 cores, 48 hours, 7.4GB/core", "hawkcpu" ]
+      - [ "hawkgpu partition, 48 cores, 48 hours, 4GB/core", "hawkgpu" ]
       <% if /himem/ =~ result  %>
       - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
       <% end %>
@@ -76,6 +68,15 @@ attributes:
       - [ "singularity test", "singularity-test"]
       - [ "virtual desktop", "vdi-test"]
       <% end %>
+  num_gpu:
+    label: "Number of GPUs"
+    value: 0
+    min: 0
+    max: 8
+    help: "Make sure you are using the correct partition above.<br />
+          lts-gpu, eng-gpu, im1080-gpu: Max 2 gpus per node,<br />
+          im2080-gpu: Max 4 gpus per node,<br />
+          hawkgpu: Max 8 gpus per node."
 
 form:
   - bc_vnc_idle
@@ -84,8 +85,8 @@ form:
   - bc_num_hours
   - bc_num_slots
   - num_cores
-  - num_gpu
   - node_type
   - custom_queue
+  - num_gpu
   - bc_vnc_resolution
   - bc_email_on_started
