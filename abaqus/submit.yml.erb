@@ -18,6 +18,3 @@ script:
     - "<%= bc_num_slots %>"
     - "-n"
     - "<%= num_cores %>"
-    <%- if gpus > "0" -%>
-    - "--gres=gpu:<%= gpus %>"
-    <%- end -%>

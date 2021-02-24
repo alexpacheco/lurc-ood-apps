@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Clean the environment
-module purge
+#module purge
 
 # Set working directory to home directory
 cd "${HOME}"
@@ -27,7 +27,6 @@ cd "${HOME}"
 #
 
 # Load the required environment
-module load intel 
 module load abaqus/<%= context.version %>
 
 # Output debug information

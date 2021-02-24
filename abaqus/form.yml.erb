@@ -40,7 +40,6 @@ attributes:
       - [ "chem partition, 36 cores, 48 hours, 5GB/core", "chem" ]
       - [ "health partition, 36 cores, 48 hours, 5GB/core", "health" ]
       - [ "hawkcpu partition, 52 cores, 48 hours, 7.4GB/core", "hawkcpu" ]
-      - [ "hawkgpu partition, 48 cores, 48 hours, 4GB/core", "hawkgpu" ]
       <% if /himem/ =~ result  %>
       - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
       <% end %>
@@ -55,17 +54,6 @@ attributes:
     help: "This defines the version of Abaqus you want to load."
     options:
       - ["2019", "2019"]
-      - ["2016", "2016"]
-      - ["6.14", "6.14"]
-  gpus: 
-    label: "Number of GPUs"
-    value: 0
-    min: 0
-    max: 8
-    help: "Make sure you are using the correct partition above.<br />
-          lts-gpu, eng-gpu, im1080-gpu: Max 2 gpus per node,<br />
-          im2080-gpu: Max 4 gpus per node,<br />
-          hawkgpu: Max 8 gpus per node."
 form:
   - version
   - num_cores
@@ -73,7 +61,6 @@ form:
   - bc_num_hours
   - bc_account
   - custom_queue
-  - gpus
   - bc_email_on_started
 
 
