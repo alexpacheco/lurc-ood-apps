@@ -35,7 +35,7 @@ cd "${HOME}"
 <% elsif /ovito/ =~ context.application %>
   # Start ovito
   ovito
-<% elsif /xfce/ =~ context.application %>
+<% elsif /desktop/ =~ context.application %>
   # Start desktop
   source "<%= session.staged_root.join("desktops", "xfce.sh") %>"
 <% elsif /chem/ =~ context.application %>
