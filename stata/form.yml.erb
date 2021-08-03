@@ -4,11 +4,12 @@
 ---
 cluster: "sol"
 description: |
-  This app will launch SAS on one Sol cpu. You will be
-  able to interact with SAS through a VNC session.
+  This app will launch STATA on one Sol cpu. You will be
+  able to interact with STATA through a VNC session.
 attributes:
-  num_cores: 1
+  desktop: xfce
   bc_num_slots: "1"
+  opsys: cent8
   bc_num_hours:
     label: "Number of hours"
     value: 1   
@@ -19,6 +20,14 @@ attributes:
     label: "Account"
     help: "Leave blank if using your default allocation."
     value: "lts"
+  num_cores: 
+    label: "Number of cores"
+    value: 1
+    min: 1
+    max: 52
+    help: "Each Stata/MP simulation can use upto 4 cpus.  
+    Request more cpus if you need more memory than provided by the partition per core.
+    For example: On LTS partition, if your 4 core STATA job requires 40GB memory, then request 7 cpus."
   custom_queue:
     label: "Partition"
     help: "Please select a partition from the drop-down."
@@ -44,16 +53,18 @@ attributes:
       <% end %>
   version:
     widget: select
-    label: "SAS version"
-    help: "This defines the version of SAS you want to load."
+    label: "STATA version"
+    help: "This defines the version of STATA you want to load."
     options:
-      - [ "9.4", "9.4"]
+      - [ "15", "15"]
 form:
   - version
-  - num_cores
-  - bc_num_slots
-  - bc_num_hours
+  - opsys
+  - desktop
   - bc_account
+  - bc_num_hours
+  - bc_num_slots
+  - num_cores
   - custom_queue
   - bc_email_on_started
   

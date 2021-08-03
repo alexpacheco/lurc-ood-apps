@@ -1,0 +1,12 @@
+---
+name: STATA
+category: Interactive Apps
+subcategory: GUIs
+role: batch_connect
+description: |
+  This app will launch a [STATA] GUI on the [Sol cluster]. 
+  You will be able to interact with the STATA GUI through a 
+  VNC session.
+
+  [SAS]: https://www.sas.com/en_us/home.html
+  [Sol cluster]: https://confluence.cc.lehigh.edu/x/B6H0BQ

@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-env | grep SLURM
-env | grep MODULEPATH
-env | grep PATH
 # Clean the environment
 module purge
 
@@ -15,7 +12,7 @@ unset SLURM_GTIDS
 
 # Work around spam message about dconf write permissions
 #export XDG_RUNTIME_DIR="/tmp/${UID}"
-unsetenv XDG_RUNTIME_DIR
+unset XDG_RUNTIME_DIR
 =======
 
 # Set working directory to home directory
@@ -32,7 +29,7 @@ cd "${HOME}"
   xfwm4 --compositor=off --daemon --sm-client-disable
   xsetroot -solid "#D3D3D3"
   xfsettingsd --sm-client-disable
-  -panel --sm-client-disable
+  xfce4-panel --sm-client-disable
 ) &
 
 #
@@ -40,7 +37,7 @@ cd "${HOME}"
 #
 
 # Load the required environment
-module load intel # for Intel MPI
+#module load intel # for Intel MPI
 module load ansys/<%= context.version %>
 
 # Another ANSYS job with the same job name (file) is already running in this
@@ -105,4 +102,6 @@ EOL
 # Launch ANSYS Workbench
 module list
 set -x
-runwb2
+#singularity exec -B /share /share/Apps/virtualapps/centos8/xfce8.sif  
+$(which runwb2)
+# -oglmesa

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Change working directory to user's home directory
+cd "${HOME}"
+
+# Reset module environment (may require login shell for some HPC clusters)
+#module purge && module restore
+module load stata/15
+
+# Create GaussView Launcher
+echo "[Desktop Entry]" > Desktop/STATA.desktop
+echo "Version=1.0" >> Desktop/STATA.desktop
+echo "Type=Application" >> Desktop/STATA.desktop
+echo "Name=STATA" >> Desktop/STATA.desktop
+echo "Comment=STATA" >> Desktop/STATA.desktop
+echo "Exec=/share/Apps/stata/15/xstata-mp" >> Desktop/STATA.desktop
+echo "Icon=" >> Desktop/STATA.desktop
+echo "Path=$HOME" >> Desktop/STATA.desktop
+echo "Terminal=false" >> Desktop/STATA.desktop
+echo "StartupNotify=false" >> Desktop/STATA.desktop
+
+chmod +x Desktop/STATA.desktop
+
+# Define Container Image
+
+
+# Start up desktop
+source "<%= session.staged_root.join("desktops", "#{context.desktop}.sh") %>"
+
+# Delete GaussView launcher
+rm -rf Desktop/STATA.desktop
+

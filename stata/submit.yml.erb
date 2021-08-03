@@ -1,3 +1,6 @@
+<%
+  image="/share/Apps/virtualapps/centos8/xfce8.sif"
+%>
 ---
 batch_connect:
   template: vnc
@@ -9,12 +12,13 @@ batch_connect:
     %s
     CTRSCRIPT
 
+    # your bindpath will differ
     export SINGULARITY_BINDPATH="$HOME,/share,/run"
-    singularity exec /share/Apps/virtualapps/centos8/xfce8.sif /bin/bash container.sh
+    #
+    #singularity run /share/Apps/virtualapps/centos7/mate.sif
+    singularity exec <%= image %>  /bin/bash container.sh    
 script:
   queue_name: <%= custom_queue %>
   native:
-    - "-N"
-    - "<%= bc_num_slots %>"
-    - "-n"
-    - "<%= num_cores %>"
+    - "-N <%= bc_num_slots %>"
+    - "-n <%= num_cores %>"

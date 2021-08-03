@@ -17,6 +17,7 @@ attributes:
     options:
       <% if /HPCSOFT/ =~ result  %>
       - ["Alma Linux", "alma"]
+      - ["Rocky Linux", "rocky"]
       <% end %>
       - ["CentOS 8", "cent8"]
       - ["CentOS 7", "cent7"]
@@ -55,7 +56,8 @@ attributes:
       - [ "chem partition, 36 cores, 48 hours, 5GB/core", "chem" ]
       - [ "health partition, 36 cores, 48 hours, 5GB/core", "health" ]
       - [ "hawkcpu partition, 52 cores, 48 hours, 7.4GB/core", "hawkcpu" ]
-      - [ "hawkgpu partition, 48 cores, 48 hours, 4GB/core", "hawkgpu" ]
+      - [ "hawkgpu partition, 45 cores, 48 hours, 4GB/core", "hawkgpu" ]
+      - [ "workshop partition, 48 cores, 48 hours, 4GB/core", "workshop" ]
       <% if /himem/ =~ result  %>
       - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
       <% end %>

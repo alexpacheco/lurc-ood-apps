@@ -1,6 +1,7 @@
 ---
 batch_connect:
-  template: vnc
+#  template: basic
+  template: basic
   websockify_cmd: '/opt/websockify/run'
   script_wrapper: |
     export XDG_RUNTIME_DIR=""
@@ -10,7 +11,7 @@ batch_connect:
     CTRSCRIPT
 
     export SINGULARITY_BINDPATH="$HOME,/share,/run"
-    singularity exec /share/Apps/virtualapps/centos7/xfce7.sif /bin/bash container.sh
+    singularity exec /share/Apps/virtualapps/centos8/xfce8.sif /bin/bash container.sh
 script:
   queue_name: <%= custom_queue %>
   native:
