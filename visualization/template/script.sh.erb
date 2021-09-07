@@ -19,7 +19,7 @@ cd "${HOME}"
   xfwm4 --compositor=off --daemon --sm-client-disable
   xsetroot -solid "#D3D3D3"
   xfsettingsd --sm-client-disable
-#  xfce4-panel --sm-client-disable
+  xfce4-panel --sm-client-disable
 ) &
 
 #singularity exec /home/alp514/virtual/molgfx.sif avogadro2
@@ -35,6 +35,15 @@ cd "${HOME}"
 <% elsif /ovito/ =~ context.application %>
   # Start ovito
   ovito
+<% elsif /pmv/ =~ context.application %>
+  # Start pmv
+  pmv
+<% elsif /adt/ =~ context.application %>
+  # Start adt
+  adt
+<% elsif /vision/ =~ context.application %>
+  # Start vision
+  vision
 <% elsif /desktop/ =~ context.application %>
   # Start desktop
   source "<%= session.staged_root.join("desktops", "xfce.sh") %>"
@@ -45,21 +54,27 @@ cd "${HOME}"
   which ase
   ase gui
 <% else %>
-  module load cent7
-  module load <%= context.application %>
   <% if /gview/ =~ context.application %>
+    module load cent7
+    module load <%= context.application %>
     gview
   <% elsif /paraview/ =~ context.application %>
+    module load gcc 
+    module load <%= context.application %>
     paraview
   <% elsif /pymol/ =~ context.application %>
     pymol
   <% elsif /pwgui/ =~ context.application %>
+    module load <%= context.application %>
     pwgui
   <% elsif /vesta/ =~ context.application %>
+    module load <%= context.application %>
     VESTA
   <% elsif /vmd/ =~ context.application %>
+    module load <%= context.application %>
     vmd
   <% elsif /xcrysden/ =~ context.application %>
+    module load cent7 <%= context.application %>
     xcrysden
   <% end %>
 <% end %>

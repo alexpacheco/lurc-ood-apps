@@ -1,3 +1,4 @@
 # Export the module function if it exists
-source /etc/profile.d/z00_lmod.sh
+#source /etc/profile.d/z00_lmod.sh
+source /etc/profile.d/lmod.sh
 [[ $(type -t module) == "function" ]] && export -f module

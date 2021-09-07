@@ -1,39 +1,32 @@
 #!/usr/bin/env bash
 
-# Clean the environment
-module purge
-
 # Set working directory to home directory
 cd "${HOME}"
 
-# Load the required environment
-module load cent7
+# Reset module environment (may require login shell for some HPC clusters)
+#module purge && module restore
 module load sas/<%= context.version %>
 
-#
-# Launch Xfce Window Manager and Panel
-#
-# Adding singularity exec /share/Apps/virtualapps/centos7/xfce.sif 
-# https://github.com/mcw-rcc/bc_rcc_igv do not have the last 2 lines
-(
-  export SEND_256_COLORS_TO_REMOTE=1
-  export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
-  export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
-  export XDG_CACHE_HOME="$(mktemp -d)"
-  set -x
-  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfwm4 --compositor=off --daemon --sm-client-disable
-  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xsetroot -solid "#D3D3D3"
-  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfsettingsd --sm-client-disable
-  singularity exec /share/Apps/virtualapps/centos7/xfce.sif xfce4-panel --sm-client-disable
-) &
+# Create GaussView Launcher
+echo "[Desktop Entry]" > Desktop/SAS.desktop
+echo "Version=1.0" >> Desktop/SAS.desktop
+echo "Type=Application" >> Desktop/SAS.desktop
+echo "Name=STATA" >> Desktop/SAS.desktop
+echo "Comment=STATA" >> Desktop/SAS.desktop
+echo "Exec=/share/Apps/sas/9.4/SASFoundation/9.4/sas" >> Desktop/SAS.desktop
+echo "Icon=" >> Desktop/SAS.desktop
+echo "Path=$HOME" >> Desktop/SAS.desktop
+echo "Terminal=false" >> Desktop/SAS.desktop
+echo "StartupNotify=false" >> Desktop/SAS.desktop
+
+chmod +x Desktop/SAS.desktop
+
+# Define Container Image
 
 
-#
-# Start SAS
-#
+# Start up desktop
+source "<%= session.staged_root.join("desktops", "#{context.desktop}.sh") %>"
 
-# Launch SAS
-module list
-set -x
-sas
+# Delete GaussView launcher
+rm -rf Desktop/SAS.desktop
 
