@@ -5,7 +5,7 @@ cd "${HOME}"
 
 # Reset module environment (may require login shell for some HPC clusters)
 #module purge && module restore
-module load stata/15
+module load stata/<%= context.version %>
 
 # Create GaussView Launcher
 echo "[Desktop Entry]" > Desktop/STATA.desktop
@@ -13,7 +13,11 @@ echo "Version=1.0" >> Desktop/STATA.desktop
 echo "Type=Application" >> Desktop/STATA.desktop
 echo "Name=STATA" >> Desktop/STATA.desktop
 echo "Comment=STATA" >> Desktop/STATA.desktop
-echo "Exec=/share/Apps/stata/15/xstata-mp" >> Desktop/STATA.desktop
+<%  if context.version.to_i == 17 %>
+echo "Exec=/share/Apps/stata/<%= context.version %>/xstata " >> Desktop/STATA.desktop
+<% else %>
+echo "Exec=/share/Apps/stata/<%= context.version %>/xstata-mp" >> Desktop/STATA.desktop
+<% end %>
 echo "Icon=" >> Desktop/STATA.desktop
 echo "Path=$HOME" >> Desktop/STATA.desktop
 echo "Terminal=false" >> Desktop/STATA.desktop

@@ -1,5 +1,8 @@
 <%
   image="/share/Apps/virtualapps/centos8/xfce8.sif"
+#  image="/share/Apps/virtualapps/centos7/xfce.sif"
+#  image="/home/alp514/gnome8.sif"
+#  image="/home/alp514/leap153-mate.sif"
 %>
 ---
 batch_connect:
@@ -16,7 +19,7 @@ batch_connect:
     export SINGULARITY_BINDPATH="$HOME,/share,/run"
     #
     #singularity run /share/Apps/virtualapps/centos7/mate.sif
-    singularity exec <%= image %>  /bin/bash container.sh    
+    singularity exec /share/Apps/virtualapps/<%= opsys %>.sif  /bin/bash container.sh    
 script:
   queue_name: <%= custom_queue %>
   native:

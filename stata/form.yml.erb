@@ -9,7 +9,6 @@ description: |
 attributes:
   desktop: xfce
   bc_num_slots: "1"
-  opsys: cent8
   bc_num_hours:
     label: "Number of hours"
     value: 1   
@@ -56,9 +55,18 @@ attributes:
   version:
     widget: select
     label: "STATA version"
-    help: "This defines the version of STATA you want to load."
+    help: "This defines the version of STATA you want to load.
+           STATA 15 opens the parallel executable while STATA 17 opens the serial executable."
     options:
       - [ "15", "15"]
+      - [ "17", "17"]
+  opsys:
+    widget: select
+    label: "Choose the OS to load."
+    help: "CentOS 8 does not display icons on the STATA 15 app. Use CentOS 7 if you want the icons to show. Other applications may not work correctly in CentOS 7"
+    options:
+      - [ "CentOS 8", "centos8/xfce8"]
+      - [ "CentOS 7", "centos7/xfce"]
 form:
   - version
   - opsys

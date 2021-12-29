@@ -14,4 +14,5 @@ if [[ -f "${HOME}/.config/monitors.xml" ]]; then
 fi
 
 # Start up Gnome desktop (block until user logs out of desktop)
-/etc/X11/xinit/Xsession gnome-session
+#/etc/X11/xinit/Xsession gnome-session
+gnome-session
