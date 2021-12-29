@@ -1,0 +1,81 @@
+<%
+  result = %x[id]
+%>
+---
+cluster: "sol"
+description: |
+  This app will launch MATLAB on one Sol cpu. This app launches MATLAB 
+  in a web browser using MATLAB integration with Jupyter. Not all toolboxes
+  support this integration.
+attributes:
+  num_cores:
+    widget: "number_field"
+    label: "Number of cores"
+    value: 1
+    help: "Maximum number of CPU cores is 52 on hawk."
+    min: 1
+    step: 1
+  bc_num_slots: "1"
+  bc_num_hours:
+    label: "Number of hours"
+    value: 1   
+    min: 1
+    max: 72
+    help: "Maximum walltime is limited to 1 hour"
+  bc_account:
+    label: "Account"
+    help: "Leave blank if using your default allocation."
+    value: "system(sacctmgr -n list User $USER format=DefaultAccount%20)"
+  custom_queue:
+    label: "Partition"
+    help: "Please select a partition from the drop-down."
+    widget: select
+    options:
+      - [ "debug partition, 16 cores, 1 hour, 3.5GB/core", "debug" ]
+      - [ "lts partition, 18 cores, 72 hours, 6GB/core", "lts" ]
+      - [ "eng partition, 22 cores, 72 hours, 5GB/core", "eng" ]
+      - [ "engc partition, 24 cores, 72 hours, 2.5GB/core", "engc" ]
+      - [ "im1080 partition, 20 cores, 48 hours, 5GB/core", "im1080" ]
+      <% if /himem/ =~ result  %>
+      - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
+      <% end %>
+      - [ "im2080 partition, 28 cores, 48 hours, 5GB/core", "im2080" ]
+      - [ "im2080-gpu partition, 28 cores, 48 hours, 5GB/core", "im2080-gpu" ]
+      - [ "enge partition, 36 cores, 72 hours, 5GB/cores", "enge" ]
+      - [ "engi partition, 36 cores, 72 hours, 5GB/cores", "engi" ]
+      - [ "chem partition, 36 cores, 48 hours, 5GB/core", "chem" ]
+      - [ "health partition, 36 cores, 48 hours, 5GB/core", "health" ]
+      - [ "hawkcpu partition, 52 cores, 48 hours, 7.4GB/core", "hawkcpu" ]
+      - [ "infolab partition, 52 cores, 48 hours, 7.4GB/core", "infolab" ]
+      - [ "hawkgpu partition, 48 cores, 48 hours, 4GB/core", "hawkgpu" ]
+      <% if /HPCSOFT/ =~ result  %>
+      - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
+      - [ "test-gpu partition, 18 cores, 72 hours, 6GB/core", "test-gpu" ]
+      - [ "workshop", "workshop"]
+      <% end %>
+  version:
+    widget: select
+    label: "MATLAB version"
+    help: "This defines the version of MATLAB you want to load."
+    options:
+      - [ "R2021b", "R2021b"]
+  gpus_per_node: 
+    label: "Number of GPUs"
+    value: 0
+    min: 0
+    max: 8
+    help: "Make sure you are using the correct partition above.<br />
+          im2080-gpu: Max 4 gpus per node,<br />
+          hawkgpu: Max 8 gpus per node."
+form:
+  - version
+  - num_cores
+  - bc_num_slots
+  - bc_num_hours
+  - bc_account
+  - custom_queue
+  - gpus_per_node
+  - bc_email_on_started
+  
+
+

@@ -13,7 +13,6 @@ unset SLURM_GTIDS
 # Work around spam message about dconf write permissions
 #export XDG_RUNTIME_DIR="/tmp/${UID}"
 unset XDG_RUNTIME_DIR
-=======
 
 # Set working directory to home directory
 cd "${HOME}"
@@ -26,10 +25,10 @@ cd "${HOME}"
   export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
   export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
   export XDG_CACHE_HOME="$(mktemp -d)"
-  xfwm4 --compositor=off --daemon --sm-client-disable
-  xsetroot -solid "#D3D3D3"
-  xfsettingsd --sm-client-disable
-  xfce4-panel --sm-client-disable
+  singularity exec /share/Apps/virtualapps/centos8/xfce8.sif xfwm4 --compositor=off --daemon --sm-client-disable
+  singularity exec /share/Apps/virtualapps/centos8/xfce8.sif xsetroot -solid "#D3D3D3"
+  singularity exec /share/Apps/virtualapps/centos8/xfce8.sif xfsettingsd --sm-client-disable
+  singularity exec /share/Apps/virtualapps/centos8/xfce8.sif xfce4-panel --sm-client-disable
 ) &
 
 #
@@ -51,45 +50,45 @@ export ANSYS_LOCK="OFF"
 #
 
 # Disable hardware rendering mode
-export CUE_GRAPHICS="mesa"
+#export CUE_GRAPHICS="mesa"
 
 # Fix bug when running Intel MPI code on OSC
-export I_MPI_PMI_EXTENSIONS=on
+#export I_MPI_PMI_EXTENSIONS=on
 
 # Add custom "OSC MPI" as a start method
 # use generic start method
-export CFX5_START_METHODS_CCL="<%= session.staged_root.join("cfx_assets", "start-methods.ccl") %>"
+#export CFX5_START_METHODS_CCL="<%= session.staged_root.join("cfx_assets", "start-methods.ccl") %>"
 
 # Make a hosts file that CFX will use in Parallel Distributed
-export SLURM_NODEFILE="${HOME}/.cfx/nodes.${SLURM_JOBID}"
-srun hostname -s | sort > $SLURM_NODEFILE 
-mkdir -p "${HOME}/.cfx"
-export CFX5_HOSTS_CCL="${HOME}/.cfx/hostinfo.${SLURM_JOBID}"
-NODES=$(tr '\n' ',' < "${SLURM_NODEFILE}" | sed -e 's/ /,/g')
-NODES=${NODES%?}
-touch "${CFX5_HOSTS_CCL}"
-cfx5parhosts -add "${NODES}" -user -file "${CFX5_HOSTS_CCL}"
+#export SLURM_NODEFILE="${HOME}/.cfx/nodes.${SLURM_JOBID}"
+#srun hostname -s | sort > $SLURM_NODEFILE 
+#mkdir -p "${HOME}/.cfx"
+#export CFX5_HOSTS_CCL="${HOME}/.cfx/hostinfo.${SLURM_JOBID}"
+#NODES=$(tr '\n' ',' < "${SLURM_NODEFILE}" | sed -e 's/ /,/g')
+#NODES=${NODES%?}
+#touch "${CFX5_HOSTS_CCL}"
+#cfx5parhosts -add "${NODES}" -user -file "${CFX5_HOSTS_CCL}"
 
 # TEST
-#cp ${CFX5_HOSTS_CCL} ${CFX5_HOSTS_CCL}.org
+##cp ${CFX5_HOSTS_CCL} ${CFX5_HOSTS_CCL}.org
 
 # Only give OSC MPI option to user through GUI
-HOSTINFO=$(head -n -2 "${CFX5_HOSTS_CCL}")
-cat > "${CFX5_HOSTS_CCL}" << EOL
-${HOSTINFO}
-    SOLVER STEP CONTROL:
-      Runtime Priority = Standard
-      MEMORY CONTROL:
-        Memory Allocation Factor = 1.0
-      END
-      PARALLEL ENVIRONMENT:
-        Parallel Host List = ${NODES}
-        Start Method = CHPC Intel MPI Distributed Parallel
-      END
-    END
-  END # EXECUTION CONTROL
-END # SIMULATION CONTROL
-EOL
+#HOSTINFO=$(head -n -2 "${CFX5_HOSTS_CCL}")
+#cat > "${CFX5_HOSTS_CCL}" << EOL
+#${HOSTINFO}
+#    SOLVER STEP CONTROL:
+#      Runtime Priority = Standard
+#      MEMORY CONTROL:
+#        Memory Allocation Factor = 1.0
+#      END
+#      PARALLEL ENVIRONMENT:
+#        Parallel Host List = ${NODES}
+#        Start Method = CHPC Intel MPI Distributed Parallel
+#      END
+#    END
+#  END # EXECUTION CONTROL
+#END # SIMULATION CONTROL
+#EOL
 
 #
 # RSH & SSH wrappers
@@ -97,11 +96,10 @@ EOL
 
 # Add RSH and SSH wrappers for Fluent and CFX
 # don't need those ...
-# export PATH="<%= session.staged_root.join("bin") %>:${PATH}"
+## export PATH="<%= session.staged_root.join("bin") %>:${PATH}"
 
 # Launch ANSYS Workbench
 module list
 set -x
 #singularity exec -B /share /share/Apps/virtualapps/centos8/xfce8.sif  
-$(which runwb2)
-# -oglmesa
+$(which runwb2) -oglmesa

@@ -1,0 +1,10 @@
+---
+name: MATLAB (HTML)
+category: Interactive Apps
+subcategory: GUIs
+role: batch_connect
+description: |
+  This app will launch an interactive [MATLAB] (version R2021b) session via HTML on one node of the [Sol cluster]. 
+  
+  [MATLAB]: https://www.mathworks.com/products/matlab.html
+  [Sol cluster]: https://confluence.cc.lehigh.edu/x/B6H0BQ 
