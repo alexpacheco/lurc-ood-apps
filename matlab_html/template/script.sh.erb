@@ -31,7 +31,7 @@ singularity run --nv --writable-tmpfs \
     --bind=$LURC_MATLAB_DIR:/opt/matlab \
     --bind=`pwd`/matlab.rc:/mathworks.rc \
     --bind=`pwd`/entrypoint.sh:/entrypoint.sh \
-    /home/alp514/matlab_r2021b.sif bash /entrypoint.sh
+    /share/Apps/virtualapps/matlab/matlab_r2021b.sif bash /entrypoint.sh
 #    --bind=/lib64/libhistory.so.7:/lib/x86_64-linux-gnu/libhistory.so.7,/etc/slurm.conf \
 #    --bind=/usr/lib64/libmunge.so.2:/lib/x86_64-linux-gnu/libmunge.so.2,/var/run/munge \
 
