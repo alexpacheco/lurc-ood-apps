@@ -10,11 +10,12 @@ batch_connect:
     CTRSCRIPT
 
     export SINGULARITY_BINDPATH="$HOME,/share,/run"
-    singularity exec /share/Apps/virtualapps/centos8/xfce8.sif /bin/bash container.sh
+    singularity exec --nv /share/Apps/virtualapps/centos8/xfce8.sif /bin/bash container.sh
+    #singularity exec /home/alp514/leap153.sif /bin/bash container.sh
 script:
   queue_name: <%= custom_queue %>
   native:
-    - "-N"
-    - "<%= bc_num_slots %>"
-    - "-n"
-    - "<%= num_cores %>"
+    - "--nodes=<%= bc_num_slots.blank? ? "1" : bc_num_slots.to_i %>"
+    - "--ntasks-per-node=<%= num_cores.blank? ? "1" : num_cores %>"
+    - "--account=<%= bc_account %>"
+    - "--gres=gpu:<%= gpus_per_node.blank? ? "0" : gpus_per_node.to_i %>"

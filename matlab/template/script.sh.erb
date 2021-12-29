@@ -8,7 +8,12 @@ module purge
 cd "${HOME}"
 
 # Load the required environment
-module load matlab/<%= context.version %>
+module load matlab/<%= context.version %> openjdk
+
+## need CUDA?
+<%- unless context.gpus_per_node== '0' -%>
+module load cuda
+<%- end  -%> 
 
 #
 # Launch Xfce Window Manager and Panel
@@ -21,10 +26,10 @@ module load matlab/<%= context.version %>
   export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
   export XDG_CACHE_HOME="$(mktemp -d)"
   set -x
-#  singularity exec /share/Apps/virtualapps/centos8/xfce8.sif xfwm4 --compositor=off --daemon --sm-client-disable
-#  singularity exec /share/Apps/virtualapps/centos8/xfce8.sif xsetroot -solid "#D3D3D3"
-#  singularity exec /share/Apps/virtualapps/centos8/xfce8.sif xfsettingsd --sm-client-disable
-#  singularity exec /share/Apps/virtualapps/centos8/xfce8.sif xfce4-panel --sm-client-disable
+  singularity exec --nv /share/Apps/virtualapps/centos8/xfce8.sif xfwm4 --compositor=off --daemon --sm-client-disable
+  singularity exec --nv /share/Apps/virtualapps/centos8/xfce8.sif xsetroot -solid "#D3D3D3"
+  singularity exec --nv /share/Apps/virtualapps/centos8/xfce8.sif xfsettingsd --sm-client-disable
+  singularity exec --nv /share/Apps/virtualapps/centos8/xfce8.sif xfce4-panel --sm-client-disable
 ) &
 
 

@@ -1,12 +1,12 @@
 ---
-name: MATLAB
+name: MATLAB (VNC)
 category: Interactive Apps
 subcategory: GUIs
 role: batch_connect
 description: |
   This app will launch a [MATLAB] GUI on the [Sol cluster]. 
-  You will be able to interact with the MATLAB GUI through a 
-  VNC session for 1 hour.
+  You will be able to start the MATLAB GUI through a 
+  VNC desktop session.
 
   [MATLAB]: https://www.mathworks.com/products/matlab.html
   [Sol cluster]: https://confluence.cc.lehigh.edu/x/B6H0BQ
