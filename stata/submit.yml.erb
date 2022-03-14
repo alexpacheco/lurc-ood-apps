@@ -7,6 +7,7 @@
 ---
 batch_connect:
   template: vnc
+  set_host: "host=$(hostname)"
   websockify_cmd: '/opt/websockify/run'
   script_wrapper: |
     export XDG_RUNTIME_DIR=""

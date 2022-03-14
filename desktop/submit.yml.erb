@@ -13,6 +13,7 @@
 ---
 batch_connect:
   template: vnc
+  set_host: "host=$(hostname)"
   websockify_cmd: '/opt/websockify/run'
   script_wrapper: |
     export XDG_RUNTIME_DIR=""
@@ -29,10 +30,10 @@ batch_connect:
 script:
   queue_name: <%= custom_queue %>
   native:
-    - "-N"
-    - "<%= bc_num_slots %>"
-    - "-n"
-    - "<%= num_cores %>"
-    <%- if gpus > "0" -%>
-    - "--gres=gpu:<%= gpus %>"
+    - "--nodes"
+    - "<%= bc_num_slots.blank? ? 1 : bc_num_slots.to_i %>"
+    - "--ntasks"
+    - "<%= num_cpus.blank? ? 1 : num_cpus.to_i %>"
+    <%- if num_gpus.to_i > "0" -%>
+    - "--gres=gpu:<%= num_gpus.to_i %>"
     <%- end -%>

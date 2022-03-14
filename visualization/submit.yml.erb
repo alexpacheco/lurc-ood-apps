@@ -5,6 +5,7 @@
 ---
 batch_connect:
   template: vnc
+  set_host: "host=$(hostname)"
 #  websockify_cmd: '/usr/bin/websockify'
   websockify_cmd: '/opt/websockify/run'
   script_wrapper: |

@@ -2,6 +2,7 @@
 batch_connect:
   template: vnc
   websockify_cmd: '/opt/websockify/run'
+  set_host: "host=$(hostname)"
   script_wrapper: |
     export XDG_RUNTIME_DIR=""
     cat << "CTRSCRIPT" > container.sh
