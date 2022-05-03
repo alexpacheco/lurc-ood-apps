@@ -1,6 +1,29 @@
-<%
-  result = %x[id]
-%>
+<%-
+require 'open3'
+begin
+    # Command to Run
+    script = '/usr/local/bin/sinfo -h --format="%P"'
+    # Create a partitions array to dynamically populate the queues associated with the user
+    partitions = []
+    # Store the output, error, status
+    output, status = Open3.capture2('bash', stdin_data: script)
+    # puts status
+    if status.success?
+        # Add it to the custom_envs array by splitting the output at '\n'. 
+        output.split("\n").each do |queue|
+            if queue != 'backfill'
+                queue = queue.gsub("*", "")
+                partitions.push(queue)
+            end
+        end
+        puts partitions
+    else
+        partition_error = "Error"
+    end
+rescue => e
+    partition_error = e.message.strip
+end
+-%>
 ---
 cluster: "sol"
 attributes:
@@ -29,73 +52,56 @@ attributes:
     [XFCE]: https://xfce.org/
     [MATE]: https://mate-desktop.org/
     [Sol cluster]: https://confluence.cc.lehigh.edu/x/B6H0BQ
+  bc_account:
+    label: "Account"
+    help: "Leave blank if using your default allocation."
+    value: "lts"
+  custom_queue:
+    id: custom_queue
+    label: Partition
+    widget: select
+    cacheable: false
+    help: |
+      - [Partition Documentation](https://go.lehigh.edu/slurm)
+    <%- if partition_error || partitions.blank?-%>   
+      <div class="text-danger">Error while fetching Partition. Please contact support!</div>
+    <%- else -%>
+    options:
+    <%- partitions.each do |q| -%>
+      - [ "<%= q %>", "<%= q %>" ]
+    <%- end -%>
+    <%- end -%>
+  num_cores: 1
+  bc_num_slots: "1"
   bc_num_hours:
     label: "Number of hours"
+    widget: number_field
     value: 1   
     min: 1
     max: 72
     help: "Maximum walltime is limited to 1 hour"
-  bc_num_slots: 1
-  num_cores: 1
-  bc_vnc_idle: 0
-  bc_vnc_resolution:
-    required: true
-  node_type: null
-  bc_account:
-    help: "You can leave this blank if **not** in multiple allocations."
-  custom_queue:
-    label: "Partition"
-    help: "Please select a partition from the drop-down."
-    widget: select
-    options:
-      - [ "lts partition, 18 cores, 72 hours, 6GB/core", "lts" ]
-      - [ "lts-gpu partition, 20 cores, 72 hours, 6GB/core", "lts-gpu" ]
-      - [ "eng partition, 22 cores, 72 hours, 5GB/core", "eng" ]
-      - [ "eng-gpu partition, 24 cores, 72 hours, 5GB/core", "eng-gpu" ]
-      - [ "engc partition, 24 cores, 72 hours, 2.5GB/core", "engc" ]
-      - [ "enge partition, 36 cores, 72 hours, 5GB/cores", "enge" ]
-      - [ "engi partition, 36 cores, 72 hours, 5GB/cores", "engi" ]
-      - [ "im1080 partition, 20 cores, 48 hours, 5GB/core", "im1080" ]
-      - [ "im1080-gpu partition, 24 cores, 48 hours, 5GB/core", "im1080-gpu" ]
-      - [ "im2080 partition, 28 cores, 48 hours, 5GB/core", "im2080" ]
-      - [ "im2080-gpu partition, 36 cores, 48 hours, 5GB/core", "im2080-gpu" ]
-      - [ "chem partition, 36 cores, 48 hours, 5GB/core", "chem" ]
-      - [ "health partition, 36 cores, 48 hours, 5GB/core", "health" ]
-      - [ "hawkcpu partition, 52 cores, 48 hours, 7.4GB/core", "hawkcpu" ]
-      - [ "hawkgpu partition, 48 cores, 48 hours, 4GB/core", "hawkgpu" ]
-      - [ "infolab partition, 52 cores, 48 hours, 7.4GB/core", "infolab" ]
-      <% if /himem/ =~ result  %>
-      - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
-      <% end %>
-      <% if /kwm/ =~ result  %>
-      - [ "pisces partition, 48 cores, 72 hours, 6GB/core", "pisces" ]
-      <% end %>
-      <% if /HPCSOFT/ =~ result  %>
-      - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
-      - [ "test-gpu partition, 18 cores, 72 hours, 6GB/core", "test-gpu" ]
-      - [ "pisces partition, 48 cores, 72 hours, 6GB/core", "pisces" ]
-      - [ "workshop", "workshop"]
-      <% end %>
-      - [ "debug partition, 16 cores, 1 hour, 3.5GB/core", "debug" ]
-  num_gpu:
+  num_gpus:
+    id: num_gpus
     label: "Number of GPUs"
-    value: 0
+    help: "Number of GPU or Cuda devices"
+    cacheable: false
+    widget: number_field
+    max: 2
     min: 0
-    max: 8
-    help: "Make sure you are using the correct partition above.<br />
-          lts-gpu, eng-gpu, im1080-gpu: Max 2 gpus per node,<br />
-          im2080-gpu: Max 4 gpus per node,<br />
-          hawkgpu: Max 8 gpus per node."
-
+    step: 1
+    value: 0
 form:
   - bc_vnc_idle
   - application
-  - bc_account
-  - bc_num_hours
-  - bc_num_slots
-  - num_cores
-  - node_type
   - custom_queue
-  - num_gpu
+  - num_cores
+  - bc_num_slots
+  - bc_num_hours
+  - num_gpus
+  - bc_account
+  - node_type
   - bc_vnc_resolution
   - bc_email_on_started
+
+
+

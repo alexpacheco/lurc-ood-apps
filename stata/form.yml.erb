@@ -1,6 +1,29 @@
-<%
-  result = %x[id]
-%>
+<%-
+require 'open3'
+begin
+    # Command to Run
+    script = '/usr/local/bin/sinfo -h --format="%P"'
+    # Create a partitions array to dynamically populate the queues associated with the user
+    partitions = []
+    # Store the output, error, status
+    output, status = Open3.capture2('bash', stdin_data: script)
+    # puts status
+    if status.success?
+        # Add it to the custom_envs array by splitting the output at '\n'. 
+        output.split("\n").each do |queue|
+            if queue != 'backfill'
+                queue = queue.gsub("*", "")
+                partitions.push(queue)
+            end
+        end
+        puts partitions
+    else
+        partition_error = "Error"
+    end
+rescue => e
+    partition_error = e.message.strip
+end
+-%>
 ---
 cluster: "sol"
 description: |
@@ -8,50 +31,6 @@ description: |
   able to interact with STATA through a VNC session.
 attributes:
   desktop: xfce
-  bc_num_slots: "1"
-  bc_num_hours:
-    label: "Number of hours"
-    value: 1   
-    min: 1
-    max: 72
-    help: "Maximum walltime is limited to 1 hour"
-  bc_account:
-    label: "Account"
-    help: "Leave blank if using your default allocation."
-    value: "lts"
-  num_cores: 
-    label: "Number of cores"
-    value: 1
-    min: 1
-    max: 52
-    help: "Each Stata/MP simulation can use upto 4 cpus.  
-    Request more cpus if you need more memory than provided by the partition per core.
-    For example: On LTS partition, if your 4 core STATA job requires 40GB memory, then request 7 cpus."
-  custom_queue:
-    label: "Partition"
-    help: "Please select a partition from the drop-down."
-    widget: select
-    options:
-      - [ "debug partition, 16 cores, 1 hour, 3.5GB/core", "debug" ]
-      - [ "lts partition, 18 cores, 72 hours, 6GB/core", "lts" ]
-      - [ "eng partition, 22 cores, 72 hours, 5GB/core", "eng" ]
-      - [ "engc partition, 24 cores, 72 hours, 2.5GB/core", "engc" ]
-      - [ "enge partition, 36 cores, 72 hours, 5GB/cores", "enge" ]
-      - [ "engi partition, 36 cores, 72 hours, 5GB/cores", "engi" ]
-      - [ "im1080 partition, 20 cores, 48 hours, 5GB/core", "im1080" ]
-      - [ "im2080 partition, 28 cores, 48 hours, 5GB/core", "im2080" ]
-      - [ "chem partition, 36 cores, 48 hours, 5GB/core", "chem" ]
-      - [ "health partition, 36 cores, 48 hours, 5GB/core", "health" ]
-      - [ "hawkcpu partition, 52 cores, 48 hours, 7.4GB/core", "hawkcpu" ]
-      - [ "infolab partition, 52 cores, 48 hours, 7.4GB/core", "infolab" ]
-      <% if /himem/ =~ result  %>
-      - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
-      <% end %>
-      <% if /HPCSOFT/ =~ result  %>
-      - [ "himem-long, 16 cores, 168 hours, 32GB/core", "himem-long"]
-      - [ "singularity test", "singularity-test"]
-      - [ "virtual desktop", "vdi-test"]
-      <% end %>
   version:
     widget: select
     label: "STATA version"
@@ -67,16 +46,55 @@ attributes:
     options:
       - [ "CentOS 8", "centos8/xfce8"]
       - [ "CentOS 7", "centos7/xfce"]
+  bc_account:
+    label: "Account"
+    help: "Leave blank if using your default allocation."
+    value: "lts"
+  custom_queue:
+    id: custom_queue
+    label: Partition
+    widget: select
+    cacheable: false
+    help: |
+      - [Partition Documentation](https://go.lehigh.edu/slurm)
+    <%- if partition_error || partitions.blank?-%>   
+      <div class="text-danger">Error while fetching Partition. Please contact support!</div>
+    <%- else -%>
+    options:
+    <%- partitions.each do |q| -%>
+      - [ "<%= q %>", "<%= q %>" ]
+    <%- end -%>
+    <%- end -%>
+  num_cores: 1
+  bc_num_slots: "1"
+  bc_num_hours:
+    label: "Number of hours"
+    widget: number_field
+    value: 1   
+    min: 1
+    max: 72
+    help: "Maximum walltime is limited to 1 hour"
+  num_gpus:
+    id: num_gpus
+    label: "Number of GPUs"
+    help: "Number of GPU or Cuda devices"
+    cacheable: false
+    widget: number_field
+    max: 2
+    min: 0
+    step: 1
+    value: 0
 form:
   - version
   - opsys
   - desktop
-  - bc_account
-  - bc_num_hours
-  - bc_num_slots
-  - num_cores
   - custom_queue
+  - num_cores
+  - bc_num_slots
+  - bc_num_hours
+  - num_gpus
+  - bc_account
   - bc_email_on_started
-  
+
 
 
