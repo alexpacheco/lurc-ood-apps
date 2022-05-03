@@ -2,7 +2,7 @@
 require 'open3'
 begin
     # Command to Run
-    script = 'sinfo -h --format="%P"'
+    script = '/usr/local/bin/sinfo -h --format="%P"'
     # Create a partitions array to dynamically populate the queues associated with the user
     partitions = []
     # Store the output, error, status
@@ -40,13 +40,21 @@ attributes:
     options:
       - ["CentOS 8", "cent8"]
       - ["CentOS 7", "cent7"]
+  bc_vnc_idle: 0
+  bc_vnc_resolution:
+    required: true
+  node_type: null
+  bc_account:
+    label: "Account"
+    help: "Leave blank if using your default allocation."
+    value: "lts"
   custom_queue:
-    label: "Partition"
-    help: "Please select a partition from the drop-down."
+    id: custom_queue
+    label: Partition
     widget: select
     cacheable: false
     help: |
-      - [Partition Documentation](https://hpc.nmsu.edu/discovery/home/partitions/)
+      - [Partition Documentation](https://go.lehigh.edu/slurm)
     <%- if partition_error || partitions.blank?-%>   
       <div class="text-danger">Error while fetching Partition. Please contact support!</div>
     <%- else -%>
@@ -55,42 +63,51 @@ attributes:
       - [ "<%= q %>", "<%= q %>" ]
     <%- end -%>
     <%- end -%>
+  num_cores: 
+    id: num_cores
+    label: "Number of cores"
+    widget: number_field
+    min: 1
+    max: 52
+    help: "Number of cores requested"
+  bc_num_slots: "1"
   bc_num_hours:
+    id: bc_num_hours
     label: "Number of hours"
+    widget: number_field
     value: 1   
     min: 1
     max: 72
-    help: "Maximum walltime is limited to 1 hour"
-  bc_num_slots: 1
-  num_cpus: 
-    label: "Number of cores"
-    value: 1
-    min: 1
-    max: 52
-    help: "Maximum is 52 cores on hawkcpu"
-  bc_vnc_idle: 0
-  bc_vnc_resolution:
-    required: true
-  bc_account:
-    help: "You can leave this blank if **not** in multiple allocations."
-  num_gpus: 
+    help: "Maximum wall time requested"
+  num_gpus:
+    id: num_gpus
     label: "Number of GPUs"
-    value: 0
+    help: "Number of GPU or Cuda devices"
+    cacheable: false
+    widget: number_field
+    max: 2
     min: 0
-    max: 8
-    help: "Make sure you are using the correct partition above.<br />
-          lts-gpu, eng-gpu, im1080-gpu: Max 2 gpus per node,<br />
-          im2080-gpu: Max 4 gpus per node,<br />
-          hawkgpu: Max 8 gpus per node."
+    step: 1
+    value: 0
+form:
+  - version
+  - custom_queue
+  - num_cores
+  - num_gpus
+  - bc_num_slots
+  - bc_num_hours
+  - bc_account
+  - bc_email_on_started
 form:
   - bc_vnc_idle
   - opsys
   - desktop
   - custom_queue
-  - bc_account
-  - bc_num_hours
-  - bc_num_slots
-  - num_cpus
+  - num_cores
   - num_gpus
-  - bc_vnc_resolution
+  - bc_num_slots
+  - bc_num_hours
+  - bc_account
   - bc_email_on_started
+  - node_type
+  - bc_vnc_resolution
