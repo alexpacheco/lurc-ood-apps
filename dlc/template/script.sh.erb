@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# Set working directory to home directory
+cd "${HOME}"
+
+# Reset module environment (may require login shell for some HPC clusters)
+#module purge && module restore
+module load anaconda3/2020.07
+module load conda/dlc
+
+# Create GaussView Launcher
+echo "[Desktop Entry]" > Desktop/DLC.desktop
+echo "Version=1.0" >> Desktop/DLC.desktop
+echo "Type=Application" >> Desktop/DLC.desktop
+echo "Name=DLC" >> Desktop/DLC.desktop
+echo "Comment=DLC" >> Desktop/DLC.desktop
+echo "Exec=python -m deeplabcut" >> Desktop/DLC.desktop
+echo "Icon=" >> Desktop/DLC.desktop
+echo "Path=$HOME" >> Desktop/DLC.desktop
+echo "Terminal=false" >> Desktop/DLC.desktop
+echo "StartupNotify=false" >> Desktop/DLC.desktop
+
+echo "[Desktop Entry]" > Desktop/JupyterLab.desktop
+echo "Version=1.0" >> Desktop/JupyterLab.desktop
+echo "Type=Application" >> Desktop/JupyterLab.desktop
+echo "Name=JupyterLab" >> Desktop/JupyterLab.desktop
+echo "Comment=JupyterLab" >> Desktop/JupyterLab.desktop
+echo "Exec=jupyter lab" >> Desktop/JupyterLab.desktop
+echo "Icon=" >> Desktop/JupyterLab.desktop
+echo "Path=$HOME" >> Desktop/JupyterLab.desktop
+echo "Terminal=false" >> Desktop/JupyterLab.desktop
+echo "StartupNotify=false" >> Desktop/JupyterLab.desktop
+
+chmod +x Desktop/DLC.desktop
+chmod +x Desktop/JupyterLab.desktop
+
+# Define Container Image
+
+
+# Start up desktop
+source "<%= session.staged_root.join("desktops", "#{context.desktop}.sh") %>"
+
+# Delete GaussView launcher
+rm -rf Desktop/DLC.desktop Desktop/JupyterLab.desktop
+

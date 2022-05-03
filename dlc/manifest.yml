@@ -1,0 +1,13 @@
+---
+name: DeepLabCut
+icon: fa://desktop
+category: Interactive Apps
+subcategory: Desktop Apps
+role: batch_connect
+description: |
+  This app will launch an interactive desktop on the [Sol cluster] for 
+  launching [DeepLabCut] (DLC) GUI or a Jupyter Notebook for DLC. 
+
+  [Sol cluster]: https://confluence.cc.lehigh.edu/x/B6H0BQ
+  [DeepLabCut]: http://www.mackenziemathislab.org/deeplabcut
+

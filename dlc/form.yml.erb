@@ -1,0 +1,94 @@
+<%-
+require 'open3'
+begin
+    # Command to Run
+    script = '/usr/local/bin/sinfo -h --format="%P"'
+    # Create a partitions array to dynamically populate the queues associated with the user
+    partitions = []
+    # Store the output, error, status
+    output, status = Open3.capture2('bash', stdin_data: script)
+    # puts status
+    if status.success?
+        # Add it to the custom_envs array by splitting the output at '\n'. 
+        output.split("\n").each do |queue|
+            if queue != 'backfill'
+                queue = queue.gsub("*", "")
+                partitions.push(queue)
+            end
+        end
+        puts partitions
+    else
+        partition_error = "Error"
+    end
+rescue => e
+    partition_error = e.message.strip
+end
+-%>
+---
+cluster: "sol"
+description: |
+  This app will launch an interactive desktop on the Sol cluster for 
+  launching DeepLabCut (DLC) GUI or a Jupyter Notebook for DLC. 
+
+attributes:
+  desktop: xfce
+  bc_num_slots: "1"
+  opsys: cent8
+  bc_num_hours:
+    label: "Number of hours"
+    widget: number_field
+    min: 1
+    max: 72
+    help: "Maximum walltime is limited to 1 hour"
+  bc_account:
+    label: "Account"
+    help: "Leave blank if using your default allocation."
+    value: "lts"
+  num_cores: 
+    label: "Number of cores"
+    widget: number_field
+    min: 1
+    max: 52
+    help: "Maximum is 52 cores on hawkcpu"
+  custom_queue:
+    id: custom_queue
+    label: Partition
+    widget: select
+    cacheable: false
+    help: |
+      - [Partition Documentation](https://go.lehigh.edu/slurm)
+    <%- if partition_error || partitions.blank?-%>   
+      <div class="text-danger">Error while fetching Partition. Please contact support!</div>
+    <%- else -%>
+    options:
+    <%- partitions.each do |q| -%>
+      - [ "<%= q %>", "<%= q %>" ]
+    <%- end -%>
+    <%- end -%>
+  num_gpus: 
+    label: "Number of GPUs"
+    widget: number_field
+    min: 0
+    max: 8
+    help: "Make sure you are using the correct partition above.<br />
+          lts-gpu, eng-gpu, im1080-gpu: Max 2 gpus per node,<br />
+          im2080-gpu: Max 4 gpus per node,<br />
+          hawkgpu: Max 8 gpus per node."
+  bc_vnc_idle: 0
+  bc_vnc_resolution:
+    required: true
+form:
+  - opsys
+  - desktop
+  - bc_account
+  - custom_queue
+  - bc_num_hours
+  - bc_num_slots
+  - num_cores
+  - num_gpus 
+  - bc_email_on_started
+  - bc_vnc_idle
+  - bc_vnc_resolution
+  
+
+
