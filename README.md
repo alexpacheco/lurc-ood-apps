@@ -7,7 +7,7 @@ Open OnDemand Applications on Lehigh's HPC cluster.
 3. MATLAB
 4. Abaqus
 5. Ansys
-6. Desktop Environment - MATE & XCFE
+6. Desktop Environment - XCFE
 7. GNU Octave
 8. SAS 
 9. Visualization Tools
@@ -20,4 +20,6 @@ Open OnDemand Applications on Lehigh's HPC cluster.
    - PyMol
    - VESTA
    - XCrysDen
+10. STATA
+11. DeepLabCut Desktop Application
 
