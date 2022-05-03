@@ -11,7 +11,7 @@ batch_connect:
     CTRSCRIPT
 
     export SINGULARITY_BINDPATH="$HOME,/share,/run"
-    singularity exec /share/Apps/virtualapps/centos8/xfce8.sif /bin/bash container.sh
+    singularity exec --nv /share/Apps/virtualapps/centos8/xfce8.sif /bin/bash container.sh
 script:
   queue_name: <%= custom_queue %>
   native:
@@ -19,3 +19,6 @@ script:
     - "<%= bc_num_slots %>"
     - "-n"
     - "<%= num_cores %>"
+    <%- if num_gpus > "0" -%>
+    - "--gres=gpu:<%= num_gpus %>"
+    <%- end -%>
