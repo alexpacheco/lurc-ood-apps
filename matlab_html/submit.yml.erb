@@ -14,10 +14,13 @@ batch_connect:
 # @see http://www.rubydoc.info/gems/ood_core/OodCore/Job/Script
 #
 script:
-##  copy_environment: true      
   queue_name: <%= custom_queue %>
   native: 
-    - "--nodes=<%= bc_num_slots.blank? ? "1" : bc_num_slots.to_i %>"
-    - "--ntasks-per-node=<%= num_cores.blank? ? "1" : num_cores %>"
-    - "--account=<%= bc_account %>"
-    - "--gres=gpu:<%= gpus_per_node.blank? ? "0" : gpus_per_node.to_i %>"
+    - "-N"
+    - "<%= bc_num_slots %>"
+    - "-n"
+    - "<%= num_cores %>"
+    <%- if num_gpus > "0" -%>
+    - "--gres=gpu:<%= num_gpus %>"
+    <%- end -%>
+
