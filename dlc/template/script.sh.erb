@@ -4,9 +4,13 @@
 cd "${HOME}"
 
 # Reset module environment (may require login shell for some HPC clusters)
-#module purge && module restore
-module load anaconda3/2020.07
-module load conda/dlc
+# Purge the module environment to avoid conflicts
+module purge
+source /share/Apps/compilers/etc/lmod/zlmod.sh
+
+# Activate Conda environment for DeepLabCut
+# Load the require modules
+module load <%= context.modules %>
 
 # Create GaussView Launcher
 echo "[Desktop Entry]" > Desktop/DLC.desktop
@@ -34,7 +38,17 @@ echo "StartupNotify=false" >> Desktop/JupyterLab.desktop
 chmod +x Desktop/DLC.desktop
 chmod +x Desktop/JupyterLab.desktop
 
-# Define Container Image
+# Activate conda environment
+<% if /dlc/ =~ context.conda_environment %>
+  module load conda/<%= context.conda_environment %>
+<% elsif /condaenv/ =~ context.conda_environment  %>
+  module load conda/dlc_myown
+<% end %>
+#
+# List loaded modules
+module list
+which python
+
 
 
 # Start up desktop

@@ -22,13 +22,15 @@ cd "${HOME}"
 #
 
 (
+  export SEND_256_COLORS_TO_REMOTE=1
   export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
   export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
   export XDG_CACHE_HOME="$(mktemp -d)"
-  singularity exec /share/Apps/virtualapps/centos8/xfce8.sif xfwm4 --compositor=off --daemon --sm-client-disable
-  singularity exec /share/Apps/virtualapps/centos8/xfce8.sif xsetroot -solid "#D3D3D3"
-  singularity exec /share/Apps/virtualapps/centos8/xfce8.sif xfsettingsd --sm-client-disable
-  singularity exec /share/Apps/virtualapps/centos8/xfce8.sif xfce4-panel --sm-client-disable
+  set -x
+  xfwm4 --compositor=off --daemon --sm-client-disable
+  xsetroot -solid "#D3D3D3"
+  xfsettingsd --sm-client-disable
+  xfce4-panel --sm-client-disable
 ) &
 
 #

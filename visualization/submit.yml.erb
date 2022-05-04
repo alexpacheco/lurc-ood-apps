@@ -11,15 +11,11 @@ batch_connect:
     CTRSCRIPT
 
     export SINGULARITY_BINDPATH="$HOME,/share,/run"
-    singularity exec --nv /share/Apps/virtualapps/chemistry.sif  /bin/bash container.sh
+    singularity exec --nv /share/Apps/virtualapps/<%= opsys %>/<%= desktop %>.sif  /bin/bash container.sh    
 script:
   queue_name: <%= custom_queue %>
   native:
-    - "-N"
-    - "<%= bc_num_slots %>"
-    - "-n"
-    - "<%= num_cores %>"
-    <%- if num_gpus > "0" -%>
-    - "--gres=gpu:<%= num_gpus %>"
-    <%- end -%>
+    - "--nodes=<%= bc_num_slots.blank? ? "1" : bc_num_slots.to_i %>"
+    - "--ntasks-per-node=<%= num_cores.blank? ? "1" : num_cores %>"
+    - "--gres=gpu:<%= num_gpus.blank? ? "0" : num_gpus.to_i %>"
 

@@ -1,6 +1,3 @@
-<%
-  image="/share/Apps/virtualapps/centos8/xfce8.sif"
-%>
 ---
 batch_connect:
   template: vnc
@@ -13,16 +10,12 @@ batch_connect:
     %s
     CTRSCRIPT
 
-    # your bindpath will differ
     export SINGULARITY_BINDPATH="$HOME,/share,/run"
-    #
-    #singularity run /share/Apps/virtualapps/centos7/mate.sif
-    singularity exec --nv <%= image %>  /bin/bash container.sh    
+    singularity exec --nv /share/Apps/virtualapps/<%= opsys %>/<%= desktop %>.sif  /bin/bash container.sh    
 script:
   queue_name: <%= custom_queue %>
   native:
-    - "-N <%= bc_num_slots %>"
-    - "-n <%= num_cores %>"
-    <%- if num_gpus > "0" -%>
-    - "--gres=gpu:<%= num_gpus %>"
-    <%- end -%>
+    - "--nodes=<%= bc_num_slots.blank? ? "1" : bc_num_slots.to_i %>"
+    - "--ntasks-per-node=<%= num_cores.blank? ? "1" : num_cores %>"
+    - "--gres=gpu:<%= num_gpus.blank? ? "0" : num_gpus.to_i %>"
+

@@ -25,12 +25,31 @@ rescue => e
 end
 -%>
 ---
+title: "STATA"
 cluster: "sol"
 description: |
   This app will launch STATA on one Sol cpu. You will be
   able to interact with STATA through a VNC session.
+form:
+  - opsys
+  - desktop
+  - version
+  - custom_queue
+  - num_cores
+  - num_gpus
+  - bc_num_slots
+  - bc_num_hours
+  - bc_account
+  - bc_email_on_started
 attributes:
   desktop: xfce
+  opsys:
+    widget: select
+    label: "Choose the OS to load."
+    help: "CentOS 8 does not display icons on the STATA 15 app. Use CentOS 7 if you want the icons to show. Other applications may not work correctly in CentOS 7"
+    options:
+      - [ "CentOS 8", "centos8"]
+      - [ "CentOS 7", "centos7"]
   version:
     widget: select
     label: "STATA version"
@@ -39,24 +58,17 @@ attributes:
     options:
       - [ "15", "15"]
       - [ "17", "17"]
-  opsys:
-    widget: select
-    label: "Choose the OS to load."
-    help: "CentOS 8 does not display icons on the STATA 15 app. Use CentOS 7 if you want the icons to show. Other applications may not work correctly in CentOS 7"
-    options:
-      - [ "CentOS 8", "centos8/xfce8"]
-      - [ "CentOS 7", "centos7/xfce"]
   bc_account:
     label: "Account"
     help: "Leave blank if using your default allocation."
-    value: "lts"
   custom_queue:
     id: custom_queue
     label: Partition
     widget: select
     cacheable: false
     help: |
-      - [Partition Documentation](https://go.lehigh.edu/slurm)
+      - [Partition Documentation](https://go.lehigh.edu/slurm#SLURM-Limitations)
+      - The max cores, time and gpus below will change depending on chosen partition.
     <%- if partition_error || partitions.blank?-%>   
       <div class="text-danger">Error while fetching Partition. Please contact support!</div>
     <%- else -%>
@@ -65,15 +77,23 @@ attributes:
       - [ "<%= q %>", "<%= q %>" ]
     <%- end -%>
     <%- end -%>
-  num_cores: 1
+  num_cores: 
+    id: num_cores
+    label: "Number of cores"
+    widget: number_field
+    min: 1
+    max: 52
+    value: 1
+    help: "Number of cores requested"
   bc_num_slots: "1"
   bc_num_hours:
+    id: bc_num_hours
     label: "Number of hours"
     widget: number_field
-    value: 1   
     min: 1
     max: 72
-    help: "Maximum walltime is limited to 1 hour"
+    value: 1
+    help: "Maximum wall time requested"
   num_gpus:
     id: num_gpus
     label: "Number of GPUs"
@@ -84,17 +104,6 @@ attributes:
     min: 0
     step: 1
     value: 0
-form:
-  - version
-  - opsys
-  - desktop
-  - custom_queue
-  - num_cores
-  - bc_num_slots
-  - bc_num_hours
-  - num_gpus
-  - bc_account
-  - bc_email_on_started
 
 
 

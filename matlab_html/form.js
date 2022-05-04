@@ -75,7 +75,7 @@ function partition_limits(selected_queue) {
 		max_cpu = 24;
 		max_gpu = 0;
 	}
-	else if (selected_queue === "enge" || selected_queue === "engi" || selected_queue === "chem" || selected_queue === "health" ) {
+	else if (selected_queue === "enge" || selected_queue === "engi" || selected_queue === "chem" || selected_queue === "health" || selected_queue === "engi-long" ) {
 		max_time = 72;
 		max_cpu = 36;
 		max_gpu = 0;
@@ -85,7 +85,7 @@ function partition_limits(selected_queue) {
 		max_cpu = 36;
 		max_gpu = 0;
         }
-	else if (selected_queue === "enge-long" || selected_queue === "engi-long" ) {
+	else if (selected_queue === "enge-long" ) {
 		max_time = 144;
 		max_cpu = 36;
 		max_gpu = 0;

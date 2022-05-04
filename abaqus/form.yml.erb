@@ -30,7 +30,20 @@ cluster: "sol"
 description: |
   This app will launch Abaqus CAE on Sol. You will be
   able to interact with Abaqus through a VNC session.
+form:
+  - opsys
+  - desktop
+  - version
+  - custom_queue
+  - num_cores
+  - num_gpus
+  - bc_num_slots
+  - bc_num_hours
+  - bc_account
+  - bc_email_on_started
 attributes:
+  desktop: xfce
+  opsys: centos8
   version:
     widget: select
     label: "Abaqus/CAE version"
@@ -40,14 +53,14 @@ attributes:
   bc_account:
     label: "Account"
     help: "Leave blank if using your default allocation."
-    value: "lts"
   custom_queue:
     id: custom_queue
     label: Partition
     widget: select
     cacheable: false
     help: |
-      - [Partition Documentation](https://go.lehigh.edu/slurm)
+      - [Partition Documentation](https://go.lehigh.edu/slurm#SLURM-Limitations)
+      - The max cores, time and gpus below will change depending on chosen partition.
     <%- if partition_error || partitions.blank?-%>   
       <div class="text-danger">Error while fetching Partition. Please contact support!</div>
     <%- else -%>
@@ -62,15 +75,16 @@ attributes:
     widget: number_field
     min: 1
     max: 52
+    value: 1
     help: "Number of cores requested"
   bc_num_slots: "1"
   bc_num_hours:
     id: bc_num_hours
     label: "Number of hours"
     widget: number_field
-    value: 1   
     min: 1
     max: 72
+    value: 1
     help: "Maximum wall time requested"
   num_gpus:
     id: num_gpus
@@ -82,15 +96,6 @@ attributes:
     min: 0
     step: 1
     value: 0
-form:
-  - version
-  - custom_queue
-  - num_cores
-  - num_gpus
-  - bc_num_slots
-  - bc_num_hours
-  - bc_account
-  - bc_email_on_started
 
 
 

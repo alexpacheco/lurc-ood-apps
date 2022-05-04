@@ -25,38 +25,46 @@ rescue => e
 end
 -%>
 ---
+title: "DeepLabCut"
 cluster: "sol"
 description: |
-  This app will launch an interactive desktop on the Sol cluster for 
+  This app will launch an interactive XFCE desktop on the Sol cluster for 
   launching DeepLabCut (DLC) GUI or a Jupyter Notebook for DLC. 
-
+form:
+  - opsys
+  - desktop
+  - modules
+  - conda_environment
+  - custom_queue
+  - num_cores
+  - num_gpus
+  - bc_num_slots
+  - bc_num_hours
+  - bc_account
+  - bc_email_on_started
+  - bc_vnc_idle
+  - bc_vnc_resolution
 attributes:
   desktop: xfce
-  bc_num_slots: "1"
-  opsys: cent8
-  bc_num_hours:
-    label: "Number of hours"
-    widget: number_field
-    min: 1
-    max: 72
-    help: "Maximum walltime is limited to 1 hour"
+  opsys: centos8
+  modules: "anaconda3/2020.07"
+  conda_environment:
+    widget: select
+    label: Choose the conda environment you want to use
+    options:
+      - ["System  DLC","dlc"]
+      - ["Own DLC in $HOME/condaenv/dlc","condaenv"]
   bc_account:
     label: "Account"
     help: "Leave blank if using your default allocation."
-    value: "lts"
-  num_cores: 
-    label: "Number of cores"
-    widget: number_field
-    min: 1
-    max: 52
-    help: "Maximum is 52 cores on hawkcpu"
   custom_queue:
     id: custom_queue
     label: Partition
     widget: select
     cacheable: false
     help: |
-      - [Partition Documentation](https://go.lehigh.edu/slurm)
+      - [Partition Documentation](https://go.lehigh.edu/slurm#SLURM-Limitations)
+      - The max cores, time and gpus below will change depending on chosen partition.
     <%- if partition_error || partitions.blank?-%>   
       <div class="text-danger">Error while fetching Partition. Please contact support!</div>
     <%- else -%>
@@ -65,30 +73,36 @@ attributes:
       - [ "<%= q %>", "<%= q %>" ]
     <%- end -%>
     <%- end -%>
-  num_gpus: 
-    label: "Number of GPUs"
+  num_cores: 
+    id: num_cores
+    label: "Number of cores"
     widget: number_field
+    min: 1
+    max: 52
+    value: 1
+    help: "Number of cores requested"
+  bc_num_slots: "1"
+  bc_num_hours:
+    id: bc_num_hours
+    label: "Number of hours"
+    widget: number_field
+    min: 1
+    max: 72
+    value: 1
+    help: "Maximum wall time requested"
+  num_gpus:
+    id: num_gpus
+    label: "Number of GPUs"
+    help: "Number of GPU or Cuda devices"
+    cacheable: false
+    widget: number_field
+    max: 2
     min: 0
-    max: 8
-    help: "Make sure you are using the correct partition above.<br />
-          lts-gpu, eng-gpu, im1080-gpu: Max 2 gpus per node,<br />
-          im2080-gpu: Max 4 gpus per node,<br />
-          hawkgpu: Max 8 gpus per node."
+    step: 1
+    value: 0
   bc_vnc_idle: 0
   bc_vnc_resolution:
     required: true
-form:
-  - opsys
-  - desktop
-  - bc_account
-  - custom_queue
-  - bc_num_hours
-  - bc_num_slots
-  - num_cores
-  - num_gpus 
-  - bc_email_on_started
-  - bc_vnc_idle
-  - bc_vnc_resolution
-  
+
 
 
