@@ -1,0 +1,47 @@
+---
+cluster: "sol"
+form:
+  - version
+  - bc_account
+  - bc_queue
+  - bc_num_hours
+  - bc_num_slots
+  - num_cores
+  - bc_vnc_resolution
+  - bc_email_on_started
+attributes:
+  num_cores: 
+    widget: "number_field"
+    label: "Number of cores"
+    value: 1
+    help: "Maximum number of CPU cores on debug is 16."
+    min: 1
+    step: 1
+    id: 'num_cores'
+  bc_num_slots: "1"
+  bc_vnc_resolution:
+    required: true
+  bc_account:
+    label: "Allocation"
+    help: "Enter your allocation name"
+    value: ""
+  bc_queue:
+    label: "Partition"
+    help: |
+      - Partition type:
+         - **lts** - lts partition, 18 cores, 72 hours, 6GB/core
+         - **eng** - eng partition, 22 cores, 72 hours, 5GB/core
+         - **engc** - engc partition, 24 cores, 72 hours, 2.5GB/core
+         - **enge/engi** - enge/engi partition, 36 cores, 72 hours, 5GB/cores
+         - **im1080** - im1080 partition, 20 cores, 48 hours, 5GB/core
+         - **im2080** - im2080 partition, 28 cores, 48 hours, 5GB/core
+         - **chem** - chem partition, 36 cores, 48 hours, 5GB/core
+         - **debug** - debug partition, 16 cores, 1 hour, 3.5GB/core
+    value: "debug"
+  version:
+    widget: select
+    label: "MATLAB version"
+    help: "This defines the version of MATLAB you want to load."
+    options:
+      - [ "R2020a", "matlab/R2020a" ]
+

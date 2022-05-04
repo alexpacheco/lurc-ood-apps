@@ -22,4 +22,5 @@ Open OnDemand Applications on Lehigh's HPC cluster.
    - XCrysDen
 10. STATA
 11. DeepLabCut Desktop Application
+12. Spyder
 

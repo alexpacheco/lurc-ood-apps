@@ -1,0 +1,14 @@
+---
+name: Spyder
+category: Interactive Apps
+subcategory: GUIs
+role: batch_connect
+description: |
+  This app will launch a [Spyder] IDE on the [Sol cluster]. 
+  You will be able to interact with the Spyder IDE through a 
+  VNC session for 1 hour. An appropriate [Python] environment 
+  needs to be loaded to develop or use Python applications.
+
+  [Spyder]: https://www.spyder-ide.org/
+  [Python]: https://confluence.cc.lehigh.edu/x/k6H0BQ
+  [Sol cluster]: https://confluence.cc.lehigh.edu/x/B6H0BQ

@@ -1,0 +1,118 @@
+<%-
+require 'open3'
+begin
+    # Command to Run
+    script = '/usr/local/bin/sinfo -h --format="%P"'
+    # Create a partitions array to dynamically populate the queues associated with the user
+    partitions = []
+    # Store the output, error, status
+    output, status = Open3.capture2('bash', stdin_data: script)
+    # puts status
+    if status.success?
+        # Add it to the custom_envs array by splitting the output at '\n'. 
+        output.split("\n").each do |queue|
+            if queue != 'backfill'
+                queue = queue.gsub("*", "")
+                partitions.push(queue)
+            end
+        end
+        puts partitions
+    else
+        partition_error = "Error"
+    end
+rescue => e
+    partition_error = e.message.strip
+end
+-%>
+---
+title: "Spyder"
+cluster: "sol"
+description: |
+  This app will launch Spyder on one Sol cpu. You will be
+  able to interact with Spyder through a VNC session.
+form:
+  - opsys
+  - desktop
+  - modules
+  - conda_environment
+  - custom_environment
+  - custom_queue
+  - num_cores
+  - num_gpus
+  - bc_num_slots
+  - bc_num_hours
+  - bc_account
+  - bc_email_on_started
+attributes:
+  desktop: xfce
+  opsys: centos8
+  modules: "anaconda3/2020.07"
+  conda_environment:
+    widget: select
+    label: Choose the conda environment you want to use
+    options:
+      - ["Do not activate a conda enviroment", "base"]
+      - ["biofluids","biofluids"]
+      - ["bioinformatics","bioinformatics"]
+      - ["biostats","biostats"]
+      - ["chem","chem"]
+      - ["mldl","mldl"]
+      - ["nlp","nlp"]
+      - ["r","r"]
+      - ["spark","spark"]
+  custom_environment:
+    widget: text_area
+    label: Enter commands to launch another python environment
+    help: |
+      - anaconda3/2020.07 is loaded by default. Only use an environment that has spyder-kernels installed.
+    value: ""
+  
+  bc_account:
+    label: "Account"
+    help: "Leave blank if using your default allocation."
+  custom_queue:
+    id: custom_queue
+    label: Partition
+    widget: select
+    cacheable: false
+    help: |
+      - [Partition Documentation](https://go.lehigh.edu/slurm#SLURM-Limitations)
+      - The max cores, time and gpus below will change depending on chosen partition.
+    <%- if partition_error || partitions.blank?-%>   
+      <div class="text-danger">Error while fetching Partition. Please contact support!</div>
+    <%- else -%>
+    options:
+    <%- partitions.each do |q| -%>
+      - [ "<%= q %>", "<%= q %>" ]
+    <%- end -%>
+    <%- end -%>
+  num_cores: 
+    id: num_cores
+    label: "Number of cores"
+    widget: number_field
+    min: 1
+    max: 52
+    value: 1
+    help: "Number of cores requested"
+  bc_num_slots: "1"
+  bc_num_hours:
+    id: bc_num_hours
+    label: "Number of hours"
+    widget: number_field
+    min: 1
+    max: 72
+    value: 1
+    help: "Maximum wall time requested"
+  num_gpus:
+    id: num_gpus
+    label: "Number of GPUs"
+    help: "Number of GPU or Cuda devices"
+    cacheable: false
+    widget: number_field
+    max: 2
+    min: 0
+    step: 1
+    value: 0
+
+
+

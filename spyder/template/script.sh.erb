@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# Clean the environment
+module purge
+source /share/Apps/compilers/etc/lmod/zlmod.sh
+
+# Set working directory to home directory
+cd "${HOME}"
+
+# Load the required modules
+module load <%= context.modules %>
+
+# Activate conda environment
+conda activate <%= context.conda_environment %>
+
+# Load custom environment
+<%= context.custom_environment.gsub /\r\n?/, "\n" %>
+
+export LD_LIBRARY_PATH=/share/Apps/lusoft/opt/spack/linux-centos8-x86_64/gcc-8.3.1/libxscrnsaver/1.2.2-wqp6uiu/lib:${LD_LIBRARY_PATH}
+
+#
+# Launch Xfce Window Manager and Panel
+#
+# Adding singularity exec /share/Apps/virtualapps/centos7/xfce.sif 
+# https://github.com/mcw-rcc/bc_rcc_igv do not have the last 2 lines
+(
+  export SEND_256_COLORS_TO_REMOTE=1
+  export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
+  export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
+  export XDG_CACHE_HOME="$(mktemp -d)"
+  set -x
+  xfwm4 --replace --compositor=off --daemon --sm-client-disable
+  xsetroot -solid "#D3D3D3"
+  xfsettingsd --sm-client-disable
+#  xfce4-panel --sm-client-disable
+) &
+
+
+#
+# Start Spyder
+#
+
+# Launch Spyder
+module list
+set -x
+spyder
+
