@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+# Set working directory to home directory
+cd "${HOME}"
+
+# Clean the environment
+module purge
+source /share/Apps/compilers/etc/lmod/zlmod.sh
+
+# Load the required modules
+module load xds
+module load ccp4
+module load phenix
+
+
+# Create XDS Launcher
+echo "[Desktop Entry]" > Desktop/XDS.desktop
+echo "Version=1.0" >> Desktop/XDS.desktop
+echo "Type=Application" >> Desktop/XDS.desktop
+echo "Name=XDS" >> Desktop/XDS.desktop
+echo "Comment=XDS" >> Desktop/XDS.desktop
+echo "Exec=xdsgui" >> Desktop/XDS.desktop
+echo "Icon=" >> Desktop/XDS.desktop
+echo "Path=$HOME" >> Desktop/XDS.desktop
+echo "Terminal=false" >> Desktop/XDS.desktop
+echo "StartupNotify=false" >> Desktop/XDS.desktop
+
+# Create CCP4 Launcher
+echo "[Desktop Entry]" > Desktop/CCP4.desktop
+echo "Version=1.0" >> Desktop/CCP4.desktop
+echo "Type=Application" >> Desktop/CCP4.desktop
+echo "Name=CCP4" >> Desktop/CCP4.desktop
+echo "Comment=CCP4" >> Desktop/CCP4.desktop
+echo "Exec=ccp4i" >> Desktop/CCP4.desktop
+echo "Icon=" >> Desktop/CCP4.desktop
+echo "Path=$HOME" >> Desktop/CCP4.desktop
+echo "Terminal=false" >> Desktop/CCP4.desktop
+echo "StartupNotify=false" >> Desktop/CCP4.desktop
+
+# Create PHENIX Launcher
+echo "[Desktop Entry]" > Desktop/PHENIX.desktop
+echo "Version=1.0" >> Desktop/PHENIX.desktop
+echo "Type=Application" >> Desktop/PHENIX.desktop
+echo "Name=PHENIX" >> Desktop/PHENIX.desktop
+echo "Comment=PHENIX" >> Desktop/PHENIX.desktop
+echo "Exec=phenix" >> Desktop/PHENIX.desktop
+echo "Icon=" >> Desktop/PHENIX.desktop
+echo "Path=$HOME" >> Desktop/PHENIX.desktop
+echo "Terminal=false" >> Desktop/PHENIX.desktop
+echo "StartupNotify=false" >> Desktop/PHENIX.desktop
+
+# Create Cytoscape Launcher
+echo "[Desktop Entry]" > Desktop/Cytoscape.desktop
+echo "Version=1.0" >> Desktop/Cytoscape.desktop
+echo "Type=Application" >> Desktop/Cytoscape.desktop
+echo "Name=Cytoscape" >> Desktop/Cytoscape.desktop
+echo "Comment=Cytoscape" >> Desktop/Cytoscape.desktop
+echo "Exec=Cytoscape" >> Desktop/Cytoscape.desktop
+echo "Icon=" >> Desktop/Cytoscape.desktop
+echo "Path=$HOME" >> Desktop/Cytoscape.desktop
+echo "Terminal=false" >> Desktop/Cytoscape.desktop
+echo "StartupNotify=false" >> Desktop/Cytoscape.desktop
+
+chmod +x Desktop/XDS.desktop
+chmod +x Desktop/CCP4.desktop
+chmod +x Desktop/PHENIX.desktop
+chmod +x Desktop/Cytoscape.desktop
+
+# Start up desktop
+source "<%= session.staged_root.join("desktops", "#{context.desktop}.sh") %>"
+
+#
+# Launch Xfce Window Manager and Panel
+#
+
+#(
+#  export SEND_256_COLORS_TO_REMOTE=1
+#  export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
+#  export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
+#  export XDG_CACHE_HOME="$(mktemp -d)"
+#  set -x
+#  singularity exec /share/Apps/virtualapps/centos8/xfce.sif xfwm4 --compositor=off --daemon --sm-client-disable
+#  singularity exec /share/Apps/virtualapps/centos8/xfce.sif xsetroot -solid "#D3D3D3"
+#  singularity exec /share/Apps/virtualapps/centos8/xfce.sif xfsettingsd --sm-client-disable
+##  singularity exec /share/Apps/virtualapps/centos8/xfce.sif xfce4-panel --sm-client-disable
+#  singularity exec /share/Apps/virtualapps/centos8/xfce.sif xfce4-screensaver --sm-client-disable
+#) &
+
+#module list
+#set -x
+##xdsgui
+##ccp4i
+###phenix

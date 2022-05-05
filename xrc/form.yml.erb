@@ -1,0 +1,99 @@
+<%-
+require 'open3'
+begin
+    # Command to Run
+    script = '/usr/local/bin/sinfo -h --format="%P"'
+    # Create a partitions array to dynamically populate the queues associated with the user
+    partitions = []
+    # Store the output, error, status
+    output, status = Open3.capture2('bash', stdin_data: script)
+    # puts status
+    if status.success?
+        # Add it to the custom_envs array by splitting the output at '\n'. 
+        output.split("\n").each do |queue|
+            if queue != 'backfill'
+                queue = queue.gsub("*", "")
+                partitions.push(queue)
+            end
+        end
+        puts partitions
+    else
+        partition_error = "Error"
+    end
+rescue => e
+    partition_error = e.message.strip
+end
+-%>
+---
+title: "XRC"
+cluster: "sol"
+description: |
+  This app will launch an interactive XFCE desktop on the Sol cluster for 
+  launching X-Ray Crytallography analysis tools - XDS, Phenix, CCP4 and Cytoscape
+form:
+  - opsys
+  - desktop
+  - custom_queue
+  - num_cores
+  - num_gpus
+  - bc_num_slots
+  - bc_num_hours
+  - bc_account
+  - bc_email_on_started
+  - bc_vnc_idle
+  - bc_vnc_resolution
+attributes:
+  desktop: xfce
+  opsys: centos8
+  bc_account:
+    label: "Account"
+    help: "Leave blank if using your default allocation."
+  custom_queue:
+    id: custom_queue
+    label: Partition
+    widget: select
+    cacheable: false
+    help: |
+      - [Partition Documentation](https://go.lehigh.edu/slurm#SLURM-Limitations)
+      - The max cores, time and gpus below will change depending on chosen partition.
+    <%- if partition_error || partitions.blank?-%>   
+      <div class="text-danger">Error while fetching Partition. Please contact support!</div>
+    <%- else -%>
+    options:
+    <%- partitions.each do |q| -%>
+      - [ "<%= q %>", "<%= q %>" ]
+    <%- end -%>
+    <%- end -%>
+  num_cores: 
+    id: num_cores
+    label: "Number of cores"
+    widget: number_field
+    min: 1
+    max: 52
+    value: 1
+    help: "Number of cores requested"
+  bc_num_slots: "1"
+  bc_num_hours:
+    id: bc_num_hours
+    label: "Number of hours"
+    widget: number_field
+    min: 1
+    max: 72
+    value: 1
+    help: "Maximum wall time requested"
+  num_gpus:
+    id: num_gpus
+    label: "Number of GPUs"
+    help: "Number of GPU or Cuda devices"
+    cacheable: false
+    widget: number_field
+    max: 2
+    min: 0
+    step: 1
+    value: 0
+  bc_vnc_idle: 0
+  bc_vnc_resolution:
+    required: true
+
+
+

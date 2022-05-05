@@ -1,0 +1,15 @@
+---
+name: XRC
+icon: fa://desktop
+category: Interactive Apps
+subcategory: Desktop Apps
+role: batch_connect
+description: |
+  This app will launch an interactive desktop on the [Sol cluster] utilizing one cpu for 
+  launching software used for X-Ray Crytallography analysis. 
+
+  [Sol cluster]: https://confluence.cc.lehigh.edu/x/B6H0BQ
+  [XDSGUI]:  https://strucbio.biologie.uni-konstanz.de/xdswiki/index.php/Installation
+  [Phenix]: https://www.phenix-online.org/download/
+  [ccp4]: http://www.ccp4.ac.uk/download/#os=mac
+  [Cytoscape]: https://cytoscape.org/
