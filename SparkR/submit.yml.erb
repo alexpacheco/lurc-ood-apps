@@ -1,0 +1,18 @@
+---
+batch_connect:
+  template: "basic"
+  set_host: "host=$(hostname)"
+  conn_params:
+    - host
+    - port
+    - password
+    - csrf_token
+script:
+  queue_name: <%= custom_queue %>
+  native:
+    - "--nodes=<%= bc_num_slots %>"
+    - "--ntasks-per-node=1"
+    - "--cpus-per-task=<%= num_cores %>"
+    <%- if gpus > "0" -%>
+    - "--gres=gpu:<%= gpus %>"
+    <%- end -%>

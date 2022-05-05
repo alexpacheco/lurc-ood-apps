@@ -1,0 +1,12 @@
+---
+name: Spark + RStudio Server 
+category: Interactive Apps
+subcategory: Servers
+role: batch_connect
+description: |
+  This app will launch [RStudio Server] an IDE for [R] on one node of the [Sol cluster].
+ 
+  [RStudio Server]: https://www.rstudio.com/products/rstudio-server/
+  [R]: https://www.r-project.org/
+  [Sol cluster]: https://confluence.cc.lehigh.edu/x/B6H0BQ
+  [Package List]: https://confluence.cc.lehigh.edu/x/NpBVBw

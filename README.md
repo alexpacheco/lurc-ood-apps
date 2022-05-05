@@ -24,3 +24,4 @@ Open OnDemand Applications on Lehigh's HPC cluster.
 11. DeepLabCut Desktop Application
 12. Spyder
 13. Spark + Jupyter
+14. Spark + RStudio 

@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+
+<%-
+  spark_config = {
+    "spark.ui.reverseProxy" => "true",
+    #"spark.ui.reverseProxyUrl" => "https://hpcportal.cc.lehigh.edu/node/${SPARK_MASTER_HOST}/${SPARK_MASTER_WEBUI_PORT}",
+    "spark.authenticate" => "true",
+    "spark.authenticate.secret" => "${SPARK_SECRET}",
+    # Comment out below when reverse proxy and authentication are added
+    # This still starts the Web UI on the master/worker procs, but disables it for
+    # the Application driver
+    "spark.ui.enabled" => "false",
+    # So we need to disable the ability to kill applications
+    "spark.ui.killEnabled" => "false",
+  }
+-%>
+
+# Load the required environment
+setup_env () {
+  source /share/Apps/compilers/etc/lmod/zlmod.sh
+  # Clean the environment
+  module purge
+  module load spark
+  module load hive
+
+  module use --append /share/Apps/share/Modules/modulefiles/singularity
+  module load rstudio/<%= context.version %>
+}
+setup_env
+
+#
+# Start RStudio Server
+#
+
+# PAM auth helper used by RStudio
+export RSTUDIO_AUTH="${PWD}/bin/auth"
+
+# Generate an `rsession` wrapper script
+export RSESSION_WRAPPER_FILE="${PWD}/rsession.sh"
+(
+umask 077
+sed 's/^ \{2\}//' > "${RSESSION_WRAPPER_FILE}" << EOL
+  #!/usr/bin/env bash
+
+  # Log all output from this script
+  export RSESSION_LOG_FILE="${RSTUDIO_SINGULARITY_HOST_MNT}${PWD}/rsession.log"
+
+  exec &>>"\${RSESSION_LOG_FILE}"
+
+  # Launch the original command
+  echo "Launching rsession..."
+  set -x
+  exec rsession --r-libs-user "${R_LIBS_USER}" "\${@}"
+EOL
+)
+chmod 700 "${RSESSION_WRAPPER_FILE}"
+
+# Set working directory to home directory
+cd "${HOME}"
+
+module list
+echo "CEPHFS" $CEPHFS_SCRATCH
+echo "LOCAL" $LOCAL_SCRATCH
+echo "TMPDIR" $TMPDIR
+export WORKDIR="$(mktemp -d)"
+echo "WORKDIR" $WORKDIR
+
+mkdir -p "${WORKDIR}/rstudio"
+python -c 'from uuid import uuid4; print(uuid4())' > "${WORKDIR}/rstudio/secure-cookie-key"
+chmod 0600 "${WORKDIR}/rstudio/secure-cookie-key"
+
+# Create a new database.conf file to live in $TMPDIR
+echo "directory=${WORKDIR}/rstudio" > ${WORKDIR}/rstudio/database.conf
+
+#
+# Launch Spark cluster in standalone mode 
+#
+source /share/Apps/spark/lurc/bin/spark.config
+/share/Apps/spark/lurc/bin/spark-start.sh
+export history_port=$(egrep -i 'started at' $SPARK_LOG_DIR/history.err | awk -F: '{print $NF}')
+export master_port=$(egrep -i 'Starting Spark master' $SPARK_LOG_DIR/master.err | awk -F: '{print $NF}')
+#source /share/Apps/spark/lurc/bin/spark.singularity
+export SINGULARITYENV_SPARK_HOME=/share/Apps/spark/spark-3.2.0-bin-hadoop3.2
+export SINGULARITYENV_HIVE_HOME=${HIVE_HOME}
+export SINGULARITYENV_JAVA_HOME=${JAVA_HOME}
+export SINGULARITYENV_HADOOP_HOME=${HADOOP_HOME}
+export SINGULARITYENV_SPARK_MASTER_HOST=${SPARK_MASTER_HOST}
+export SINGULARITYENV_SPARK_MASTER_PORT=${master_port}
+# export SINGULARITYENV_SPARK_DIST_CLASSPATH=${SPARK_DIST_CLASSPATH}
+export SINGULARITYENV_R_ENVIRON_USER=${WORKDIR}/.Renviron  
+
+# Get environment variables for SPARK
+cat << EOF > ${WORKDIR}/.Renviron
+CEPHFS_SCRATCH=${CEPHFS_SCRATCH}
+SPARK_HOME=/share/Apps/spark/spark-3.2.0-bin-hadoop3.2
+HIVE_HOME=${HIVE_HOME}
+JAVA_HOME=${JAVA_HOME}
+HADOOP_HOME=${HADOOP_HOME}
+SPARK_MASTER_HOST=${SPARK_MASTER_HOST}
+SPARK_MASTER_PORT=${master_port}
+SPARK_WORKER_CORES=${SPARK_WORKER_CORES}
+SPARK_WORKER_MEMORY=${SPARK_MEM}
+SPARK_EXECUTOR_MEMORY=${SPARK_MEM}
+SPARK_HISTORY_OPTS="-Dspark.history.fs.logDirectory=file:///tmp/spark-events"
+EOF
+
+<% if context.gpus.to_i > 0 %>
+  module load cuda
+  export SINGULARITYENV_CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES}
+  export SINGULARITYENV_CUDA_HOME=${CUDA_HOME}
+  NV_OPTION="--nv"
+  cat << EOF >> ${WORKDIR}/.Renviron
+CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES}
+CUDA_HOME=${CUDA_HOME}
+
+EOF
+<% else %>
+  echo "" >> ${WORKDIR}/.Renviron 
+<% end %>
+
+set -x
+# Launch the RStudio Server
+echo "Starting up rserver..."
+
+# https://github.com/mcw-rcc/bc_rcc_rstudio_server/commit/91c80596acabf7bce73ec32e9d803b2f3f7652bb#diff-5cde0f1298f41f7d1c8b907a36992a7a513225a2615bd6e307bf1a9149b06b40
+singularity exec ${NV_OPTION} -B "$CEPHFS_SCRATCH:/tmp" -B ${WORKDIR}/.Renviron:${HOME}/.Renviron \
+  "$RSTUDIO_SERVER_IMAGE" rserver \
+  --www-port "${port}" \
+  --auth-none 0 \
+  --auth-pam-helper-path "${RSTUDIO_AUTH}" \
+  --auth-encrypt-password 0 \
+  --rsession-path "${RSESSION_WRAPPER_FILE}" \
+  --server-data-dir "${WORKDIR}/rstudio" \
+  --server-working-dir "${WORKDIR}/rstudio" \
+  --server-user "${USER}" \
+  --secure-cookie-key-file "${WORKDIR}/rstudio/secure-cookie-key" \
+  --database-config-file "${WORKDIR}/rstudio/database.conf"
+
+echo 'Singularity has exited...'
