@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+
+#
+# Start Jupyter Notebook server + Spark cluster
+#
+
+echo "Starting main script..."
+echo "TTT - $(date)"
+
+# Set working directory to home directory
+cd "${HOME}"
+
+
+#
+# Launch Jupyter with PySpark
+#
+
+export PYSPARK_DRIVER_PYTHON='jupyter'
+<% if context.jupyterlab_switch == "1" %>
+  export PYSPARK_DRIVER_PYTHON_OPTS="lab --config=\"${CONFIG_FILE}\""
+<% else %>
+  export PYSPARK_DRIVER_PYTHON_OPTS="notebook --config=\"${CONFIG_FILE}\""
+<% end %> 
+#export PYSPARK_DRIVER_PYTHON_OPTS='<%= context.jupyterlab_switch == "1" ? "lab" : "notebook" %> --config=\"${CONFIG_FILE}\"'
+#export PYSPARK_SUBMIT_ARGS=" \\
+#  --master spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT} \\
+#  --driver-memory 2G \\
+#  --executor-memory ${SPARK_MEM} \\
+#  --conf spark.driver.maxResultSize=0 \\
+#  --properties-file \"${SPARK_CONFIG_FILE}\" \\
+#  pyspark-shell \\
+#"
+#export PYSPARK_SUBMIT_ARGS=" \
+#  --master spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT} \
+#  --driver-memory 2G \
+#  --executor-memory ${SPARK_MEM} \
+# " 
+
+# List loaded modules
+module list
+
+# Benchmark info
+echo "TIMING - Starting jupyter at: $(date)"
+
+# Launch the Jupyter Notebook Server
+set -x
+#jupyter  <%= context.jupyterlab_switch == "1" ? "lab" : "notebook" %> --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
+pyspark \
+  --master spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT} \
+  --driver-memory 2G \
+  --executor-memory ${SPARK_MEM} \
+  --total-executor-cores $((SLURM_NTASKS * SLURM_CPUS_PER_TASK)) \
+  --conf "spark.eventLog.enabled=true" \
+  --conf "spark.eventLog.dir=file://${TMPDIR}/spark-events"
+

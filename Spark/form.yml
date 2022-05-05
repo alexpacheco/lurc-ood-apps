@@ -1,0 +1,48 @@
+---
+cluster: "sol"
+form:
+  - modules
+  - extra_jupyter_args
+  - bc_account
+  - custom_queue
+#  - bc_queue
+  - bc_num_hours
+  - bc_num_slots
+  - num_cores
+  - custom_environment
+  - bc_email_on_started
+#  - gpu_type
+attributes:
+  modules: "jupyter"
+  custom_queue:
+    label: Partition
+    help: Please select a partition from the drop-down.
+    widget: select
+    options:
+      - [ "debug partition, 16 cores, 1 hour, 3.5GB/core", "debug" ]
+      - [ "lts partition, 18 cores, 72 hours, 6GB/core", "lts" ]
+      - [ "eng partition, 22 cores, 72 hours, 5GB/core", "eng" ]
+      - [ "engc partition, 24 cores, 72 hours, 2.5GB/core", "engc" ]
+      - [ "enge/engi partition, 36 cores, 72 hours, 5GB/cores", "enge" ]
+      - [ "enge/engi partition, 36 cores, 72 hours, 5GB/cores", "engi" ]
+      - [ "im1080 partition, 20 cores, 48 hours, 5GB/core", "im1080" ]
+      - [ "im2080 partition, 28 cores, 48 hours, 5GB/core", "im2080" ]
+      - [ "chem partition, 36 cores, 48 hours, 5GB/core", "chem" ]
+      - [ "health partition, 36 cores, 48 hours, 5GB/core", "health" ]
+      - [ "test-gpu partition, 20 cores, 1 hour, 3.5GB/core", "test-gpu"]
+  num_cores: 
+    widget: "number_field"
+    label: "Number of cores"
+    value: 1
+    help: "Maximum number of CPU cores on debug is 16."
+    min: 1
+    step: 1
+  bc_num_hours:
+    value: 1
+    min: 1
+    step: 1
+    help: "Maximum wall time on debug is 1 hour, otherwise 48 hours."
+  bc_account:
+    label: "Allocation"
+    help: "Enter your allocation name"
+    value: ""

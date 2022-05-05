@@ -1,0 +1,9 @@
+---
+name: Jupyter + Spark
+category: Interactive Apps
+subcategory: Servers
+role: batch_connect
+description: "This app will launch a [Jupyter Notebook] server using [Python] as well
+  as an\r\n[Apache Spark] cluster on the [Sol cluster].\r\n\r\n[Jupyter Notebook]:
+  https://jupyter.org/\r\n[Python]: https://www.python.org/\r\n[Apache Spark]: https://spark.apache.org/\r\n[Sol
+  cluster]: https://go.lehigh.edu/sol\r\n"

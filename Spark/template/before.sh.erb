@@ -1,0 +1,69 @@
+<%-
+  spark_config = {
+    "spark.ui.reverseProxy" => "true",
+    #"spark.ui.reverseProxyUrl" => "https://hpcportal.cc.lehigh.edu/node/${SPARK_MASTER_HOST}/${SPARK_MASTER_WEBUI_PORT}",
+    "spark.authenticate" => "true",
+    "spark.authenticate.secret" => "${SPARK_SECRET}",
+    # Comment out below when reverse proxy and authentication are added
+    # This still starts the Web UI on the master/worker procs, but disables it for
+    # the Application driver
+    "spark.ui.enabled" => "false",
+    # So we need to disable the ability to kill applications
+    "spark.ui.killEnabled" => "false",
+  }
+-%>
+
+# Export the module function if it exists
+source /share/Apps/compilers/etc/lmod/zlmod.sh
+[[ $(type -t module) == "function" ]] && export -f module
+
+# Find available port to run server on
+port=$(find_port ${host})
+
+# Generate SHA1 encrypted password (requires OpenSSL installed)
+SALT="$(create_passwd 16)"
+password="$(create_passwd 16)"
+PASSWORD_SHA1="$(echo -n "${password}${SALT}" | openssl dgst -sha1 | awk '{print $NF}')"
+
+# Notebook root directory
+export NOTEBOOK_ROOT="${NOTEBOOK_ROOT:-${HOME}}"
+
+# The `$CONFIG_FILE` environment variable is exported as it is used in the main
+# `script.sh.erb` file when launching the Jupyter Notebook server.
+export CONFIG_FILE="${PWD}/config.py"
+
+# Generate Jupyter configuration file with secure file permissions
+(
+umask 077
+cat > "${CONFIG_FILE}" << EOL
+c.JupyterApp.config_file_name = 'ondemand_config'
+c.KernelSpecManager.ensure_native_kernel = False
+c.NotebookApp.ip = '*'
+c.NotebookApp.port = ${port}
+c.NotebookApp.port_retries = 0
+c.NotebookApp.password = u'sha1:${SALT}:${PASSWORD_SHA1}'
+c.NotebookApp.base_url = '/node/${host}/${port}/'
+c.NotebookApp.open_browser = False
+c.NotebookApp.allow_origin = '*'
+c.NotebookApp.notebook_dir = '${NOTEBOOK_ROOT}'
+c.NotebookApp.disable_check_xsrf = True
+EOL
+)
+
+# Clean the environment
+module purge
+module load spark
+module load anaconda3
+module load conda/spark
+#
+# Launch Spark cluster in standalone mode
+#
+
+source /share/Apps/spark/lurc/bin/spark.config
+
+/share/Apps/spark/lurc/bin/spark-start.sh
+
+history_port=$(egrep -i 'started at' $SPARK_LOG_DIR/history.err | awk -F: '{print $NF}')
+master_port=$(egrep -i 'started at' $SPARK_LOG_DIR/master.err | awk -F: '{print $NF}')
+
+
